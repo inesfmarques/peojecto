@@ -54,6 +54,16 @@ public class BipGSS_Matrix implements BipGSS {
 		return R;
 	}
 	
+	// Return id of source
+	public int getSource() {
+		return source;
+	}
+	
+	// Return id of sink
+	public int getSink() {
+		return sink;
+	}
+	
 	// Returns weight of edge from i to j
 	public boolean edgeQ(int l, int r) {
 		if (l == source && r < L && s[r] > 0) return s[r] == 1;

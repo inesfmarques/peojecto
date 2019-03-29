@@ -18,6 +18,12 @@ public interface BipGSS {
 	// Return size of right set
 	int getR();
 	
+	// Return id of source
+	int getSource();
+	
+	// Return id of sink
+	int getSink();
+	
 	// Returns 'true' if there is an edge from l to r, 'false' otherwise
 	boolean edgeQ(int l, int r);
 	
