@@ -17,6 +17,12 @@ public interface BipWGSS {
 	// Return size of right set
 	int getR();
 	
+	// Return id of source
+	int getSource();
+	
+	// Return id of sink
+	int getSink();
+	
 	// Returns weight of edge from i to j
 	// Returns 0 if no such edge exists
 	int getWeight(int l, int r);

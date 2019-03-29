@@ -67,6 +67,16 @@ public class BipWGSS_Matrix implements BipWGSS {
 		return R;
 	}
 	
+	// Return id of source
+	public int getSource() {
+		return source;
+	}
+	
+	// Return id of sink
+	public int getSink() {
+		return sink;
+	}
+	
 	// Returns weight of edge from i to j
 	public int getWeight(int l, int r) {
 		if (l == source && r < L && s[r][0] == 1) return s[r][1];
@@ -89,20 +99,20 @@ public class BipWGSS_Matrix implements BipWGSS {
 			s[l][1] = w;
 		}
 		else if (r == sink && l >=L && l < L+R) {
-			t[l][0] = 1;
-			t[l][1] = w;
+			t[l-L][0] = 1;
+			t[l-L][1] = w;
 		}
 		else if (l == sink && r >=L && r < L+R) {
-			t[r][0] = -1;
-			t[r][1] = w;
+			t[r-L][0] = -1;
+			t[r-L][1] = w;
 		}
 		else if (l < L && r >= L && r < L+R) {
 			E[l][r-L][0] = 1;
 			E[l][r-L][1] = w;
 		}
 		else if (r < L && l >= L && l < L+R) {
-			E[l][r-L][0] = -1;
-			E[l][r-L][1] = w;
+			E[r][l-L][0] = -1;
+			E[r][l-L][1] = w;
 		}
 		return;
 	}
@@ -111,10 +121,10 @@ public class BipWGSS_Matrix implements BipWGSS {
 	public boolean edgeQ(int l, int r) {
 		if (l == source && r < L) return s[r][0] == 1;
 		if (r == source && l < L) return s[l][0] == -1;
-		if (r == sink && l >=L && l < L+R) return t[l][0] == 1;
-		if (l == sink && r >=L && r < L+R) return t[r][0] == -1;
+		if (r == sink && l >=L && l < L+R) return t[l-L][0] == 1;
+		if (l == sink && r >=L && r < L+R) return t[r-L][0] == -1;
 		if (l < L && r >= L && r < L+R) return E[l][r-L][0] == 1;
-		if (r < L && l >= L && l < L+R) return E[l][r-L][0] == -1;
+		if (r < L && l >= L && l < L+R) return E[r][l-L][0] == -1;
 		return false;
 	}
 	
@@ -188,8 +198,8 @@ public class BipWGSS_Matrix implements BipWGSS {
 				string += "\n";
 				b = false;
 			}
-			if (s[i][1] == 1) string += "--> " + source + " ---[" + s[i][1] + "]---> " + i + "\n";
-			if (s[i][1] == -1) string += "--> " + source + " <---[" + s[i][1] + "]--- " + i + "\n";
+			if (s[i][0] == 1) string += "--> " + source + " ---[" + s[i][1] + "]---> " + i + "\n";
+			if (s[i][0] == -1) string += "--> " + source + " <---[" + s[i][1] + "]--- " + i + "\n";
 		}
 		if (b) string += " None!\n";
 		

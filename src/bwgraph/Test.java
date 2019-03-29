@@ -3,7 +3,8 @@ package bwgraph;
 public class Test {
 
 	public static void main(String[] args) {
-		BipWG graph = new BipWG_Matrix(10,4);
+		BipWG grapha = new BipWG_Matrix(10,4);
+		BipWGSS graph = new BipWGSS_Matrix(grapha);
 		graph.addEdge(2, 12, 0);
 		graph.addEdge(12, 9, -6);
 		graph.addEdge(5, 13, -2);
