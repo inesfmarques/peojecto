@@ -3,6 +3,7 @@
 package bwgraph;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public interface BipWGSS {
 	// Bipartite graph has two sets of vertices, {0, ... , n-1} (left set) and {n, ... , n+m-1} (right set)
@@ -37,4 +38,13 @@ public interface BipWGSS {
 	
 	// Returns a list with the descendants of vertex v
 	ArrayList<Integer> lovers(int v);
+	
+	// Finds a path from source to sink through Bellman-Ford to minimize the cost
+	// Returns the list of vertex labels that form the path
+	// Returns an empty list if no such path exists
+	LinkedList<Integer> BellmanFord();
+			
+	// Receives a list of vertices that form a path from source to sink and inverts it
+	// path is destroyed into an empty list
+	void invertPath(LinkedList<Integer> path);
 }

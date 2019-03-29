@@ -1,10 +1,13 @@
 package bwgraph;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+
 public class Test {
 
 	public static void main(String[] args) {
-		BipWG grapha = new BipWG_Matrix(10,4);
-		BipWGSS graph = new BipWGSS_Matrix(grapha);
+		/*
+		BipWG graph = new BipWG_Matrix(10,4);
 		graph.addEdge(2, 12, 0);
 		graph.addEdge(12, 9, -6);
 		graph.addEdge(5, 13, -2);
@@ -24,6 +27,24 @@ public class Test {
 		System.out.println(graph.getWeight(2,12));
 		System.out.println(graph.edgeQ(12,2));
 		System.out.println(graph.getWeight(12,2));
+		*/
+		
+		BipWG G = new BipWG_Matrix(3,3);
+		G.addEdge(0, 3, 1);
+		G.addEdge(0, 4, 5);
+		G.addEdge(1, 4, 8);
+		G.addEdge(1, 5, 1);
+		G.addEdge(2, 3, 2);
+		G.addEdge(2, 5, 0);
+		
+		System.out.println("Starting graph:");
+		System.out.print(G);
+		System.out.println();
+		LinkedList<int[]> results = G.MaxFlow();
+		System.out.println("Result: ");
+		for (int i = 0; i < results.size(); i++) {
+			System.out.println(Arrays.toString(results.get(i)));
+		}
 	}
 
 }

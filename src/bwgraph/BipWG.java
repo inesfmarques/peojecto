@@ -3,6 +3,7 @@
 package bwgraph;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public interface BipWG {
 	// Bipartite graph has two sets of vertices, {0, ... , n-1} (left set) and {n, ... , n+m-1} (right set)
@@ -29,4 +30,7 @@ public interface BipWG {
 	
 	// Returns a list with the descendants of vertex v
 	ArrayList<Integer> lovers(int v);
+	
+	// Finds a maximum bipartite matching using Ford-Fulkerson with Bellman-Ford to find the augmenting paths
+	LinkedList<int[]> MaxFlow();
 }

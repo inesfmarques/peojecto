@@ -3,6 +3,8 @@
 package bwgraph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 public class BipWGSS_Matrix implements BipWGSS {
 	int L; // Number of vertices on the left set
@@ -81,8 +83,8 @@ public class BipWGSS_Matrix implements BipWGSS {
 	public int getWeight(int l, int r) {
 		if (l == source && r < L && s[r][0] == 1) return s[r][1];
 		else if (r == source && l < L && s[l][0] == -1) return s[l][1];
-		else if (r == sink && l >=L && l < L+R && t[l][0] == 1) return t[l][1];
-		else if (l == sink && r >=L && r < L+R && t[r][0] == -1) return t[r][1];
+		else if (r == sink && l >=L && l < L+R && t[l-L][0] == 1) return t[l-L][1];
+		else if (l == sink && r >=L && r < L+R && t[r-L][0] == -1) return t[r-L][1];
 		else if (l < L && r >= L && r < L+R && E[l][r-L][0] == 1) return E[l][r-L][1];
 		else if (r < L && l >= L && l < L+R && E[r][l-L][0] == -1) return E[r][l-L][1];
 		else return 0;
@@ -154,6 +156,96 @@ public class BipWGSS_Matrix implements BipWGSS {
 		return result;
 	}
 	
+	public LinkedList<Integer> BellmanFord(){
+		int[] dist = new int[L+R+2];
+		int[] pred = new int[L+R+2];
+		for(int i=0; i<L+R+2; i++) {
+			dist[i] = Integer.MAX_VALUE;
+			pred[i] = -1;
+		}
+		
+		//Ciclo para descobrir a ordem das arestas
+		ArrayList<int[]> order = new ArrayList<int[]>(); //lista com arestas ordenada
+		//Acrescentar arestas que partem da source para serem as primeiras
+		ArrayList<Integer> l = lovers(source);
+		for(int j=0; j<l.size(); j++) {
+			order.add(new int[] {source,l.get(j)});
+		}
+		//para cada vertice ir buscar os lovers e mete-los por ordem
+		for(int i=0; i<L+R; i++) {
+			l = lovers(i);
+			for(int j=0; j<l.size(); j++) {
+				order.add(new int[] {i,l.get(j)});
+			}
+		}
+		//SE DER MAL ACRESCENTAR ARESTAS QUE PARTEM DO SINK
+		
+		/*
+		for(int i=0; i<order.size(); i++) {
+			System.out.println(Arrays.toString(order.get(i)));
+		}
+		*/
+		
+		dist[L+R] = 0;	
+		for(int i=0; i<L+R+1; i++) {
+			int[] copy = Arrays.copyOf(dist, dist.length);
+			for(int j=0; j<order.size(); j++) {
+				int[] a = order.get(j);
+				int u = a[0];
+				int v = a[1];
+				int w = getWeight(u,v);
+				if(dist[u] != Integer.MAX_VALUE && dist[u] + w < dist[v]) {
+					dist[v] = dist[u] + w;
+					pred[v] = u;
+				}
+			}
+			if(copy == dist) {break;}
+		}
+		
+		// Build the path
+		LinkedList<Integer> path = new LinkedList<Integer>(); // Where we store the path
+		if(pred[sink] != -1) {
+			path.add(sink);
+			int e = sink;
+			while(e!=source) {
+				path.addFirst(pred[e]);
+				e=pred[e];
+			}
+		}
+		//System.out.println(Arrays.toString(path.toArray()));
+		return path;
+	}
+	
+	
+	// Receives a list of vertices that form a path from source to sink and inverts it
+		public void invertPath(LinkedList<Integer> path) {
+			// First vertex is the sink
+			path.removeFirst();
+			s[path.getFirst()][0] = -1;
+			int i,j;
+			while(path.size() != 2) {
+				i = path.getFirst();
+				j = path.get(1);
+				if (i<j) {
+					E[i][j-L][0] = -E[i][j-L][0];
+					E[i][j-L][1] = -E[i][j-L][1];
+				}
+				else {
+					E[j][i-L][0] = -E[j][i-L][0];
+					E[j][i-L][1] = -E[j][i-L][1];
+				}
+				path.removeFirst();
+			}
+			// Last edge is the source
+			t[path.getFirst()-L][0] = -1;
+			
+			// Make path empty
+			path.clear();
+			
+			return;
+		}
+	
+	
 	// toString method
 	public String toString() {
 		String string = "Number of vertices in set 1: " + L + "\nNumber of vertices in set 2: " + R + "\nSource id: " + source + "\nSink id: " + sink + "\n";
@@ -198,8 +290,8 @@ public class BipWGSS_Matrix implements BipWGSS {
 				string += "\n";
 				b = false;
 			}
-			if (s[i][0] == 1) string += "--> " + source + " ---[" + s[i][1] + "]---> " + i + "\n";
-			if (s[i][0] == -1) string += "--> " + source + " <---[" + s[i][1] + "]--- " + i + "\n";
+			if (s[i][1] == 1) string += "--> " + source + " ---[" + s[i][1] + "]---> " + i + "\n";
+			if (s[i][1] == -1) string += "--> " + source + " <---[" + s[i][1] + "]--- " + i + "\n";
 		}
 		if (b) string += " None!\n";
 		

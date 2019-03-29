@@ -3,6 +3,7 @@
 package bwgraph;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class BipWG_Matrix implements BipWG{
 	int L; // Number of vertices on the left set
@@ -77,6 +78,32 @@ public class BipWG_Matrix implements BipWG{
 		}
 		return result;
 	}
+	
+	// Finds a maximum bipartite matching using MaxFlow and BellmanFord
+		public LinkedList<int[]> MaxFlow() {
+			
+			// Graph with source and sink added
+			BipWGSS_Matrix ResidualGraph = new BipWGSS_Matrix(this);
+			
+			// Do the cycle: find a path, then reverse it
+			LinkedList<Integer> path = ResidualGraph.BellmanFord();		
+			while(!path.isEmpty()) {
+				ResidualGraph.invertPath(path);
+				path = ResidualGraph.BellmanFord();
+			}		
+			// Create list with results
+			LinkedList<int[]> result = new LinkedList<int[]>();
+			for (int i = 0; i < ResidualGraph.L; i++) {
+				for (int j = ResidualGraph.L; j < ResidualGraph.L + ResidualGraph.R; j++) {
+					if (ResidualGraph.edgeQ(j, i)) {
+						result.add(new int[] {i,j});
+						continue;
+					}
+				}
+			}
+			return result;
+		}
+	
 	
 	// toString method
 	public String toString() {
