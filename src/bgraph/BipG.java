@@ -20,9 +20,9 @@ public interface BipG {
 	// Does nothing if l and r are in the same set
 	void addEdge(int l, int r);
 	
-	// Adds directed edges from vertex l to vertices in array r_array
+	// Adds directed edges from vertex l to vertices in array rArray
 	// Does nothing when vertices are in the same set
-	void addEdge(int l, int[] r_array);
+	void addEdge(int l, int[] rArray);
 	
 	// Returns 'true' if there is an edge from l to r, 'false' otherwise
 	boolean edgeQ(int l, int r);
@@ -30,9 +30,12 @@ public interface BipG {
 	// Returns a list with the descendants of vertex v
 	ArrayList<Integer> lovers(int v);
 	
-	// Finds a maximum bipartite matching using Edmonds-Karp (that is, Ford-Fulkerson and BFS to improve the matching)
+	// Finds a maximum bipartite matching using Edmonds-Karp (that is, Ford-Fulkerson and BFS to improve matchings)
 	LinkedList<int[]> EdmondsKarp();
 	
-	// Finds a maximum bipartite matching using Ford-Fulkerson with DFS to improve the matching
+	// Finds a maximum bipartite matching using Ford-Fulkerson with DFS to improve matchings
 	LinkedList<int[]> FordFulkerson();
+	
+	// Finds a maximum bipartite matching using Hopcroft-Karp (that is, BFS and DFS to improve matchings)
+	LinkedList<int[]> HopcroftKarp();
 }

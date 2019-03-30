@@ -79,10 +79,10 @@ public class BipGSS_Matrix implements BipGSS {
 	public void addEdge(int l, int r) {
 		if (l == source && r < L) s[r] = 1;
 		if (r == source && l < L) s[l] = -1;
-		if (r == sink && l >=L && l < L+R) t[l] = 1;
-		if (l == sink && r >=L && r < L+R) t[r] = -1;
+		if (r == sink && l >=L && l < L+R) t[l-L] = 1;
+		if (l == sink && r >=L && r < L+R) t[r-L] = -1;
 		if (l < L && r >= L && r < L+R) E[l][r-L] = 1;
-		if (r < L && l >= L && l < L+R) E[l][r-L] = -1;
+		if (r < L && l >= L && l < L+R) E[r][l-L] = -1;
 		return;
 	}
 	
@@ -138,7 +138,7 @@ public class BipGSS_Matrix implements BipGSS {
 			ArrayList<Integer> l = lovers(head); // Get neighbors
 			for(int i = 0; i < l.size(); i++) { // Go through neighbors
 				e = l.get(i);
-				if(visited[e] == -1) { // Check if we've visited this neighbor
+				if(visited[e] == -1) { // Check if we've visited this vertex
 					queue.add(e);
 					visited[e] = head;
 					// If we're looking at the sink, break loop
@@ -183,9 +183,9 @@ public class BipGSS_Matrix implements BipGSS {
 		while(!stack.empty()) {
 			head = stack.pop();
 			ArrayList<Integer> l = lovers(head); // Get neighbors
-			for(int i = 0; i < l.size(); i++) { // Go through neighbors
+			for(int i = l.size() - 1; i > -1; i--) { // Go through neighbors
 				e = l.get(i);
-				if(visited[e] == -1) { // Check if we've visited this neighbor
+				if(visited[e] == -1) { // Check if we've visited this vertex
 					stack.push(e);
 					visited[e] = head;
 					// If we're looking at the sink, break loop
@@ -205,6 +205,88 @@ public class BipGSS_Matrix implements BipGSS {
 		}
 		return path;
 	}
+	
+	// Auxiliary method for Hopcroft-Karp: BFS phase
+		public int[] HopcroftKarpBFS() {
+			// Array with the distances
+			int[] dist = new int[sink+1];
+			for(int i = 0; i < sink+1; i++) dist[i] = -1;
+			dist[source] = 0;
+			
+			// Queue used for BFS
+			Queue<Integer> queue = new LinkedList<Integer>();
+			queue.add(source);
+			
+			// Variables used in BFS
+			int head, v;
+			ArrayList<Integer> l;
+			
+			// BFS
+			while(!queue.isEmpty()) {
+				head = queue.poll();
+				l = lovers(head); // Get neighbors
+				for(int i = 0; i < l.size(); i++) { // Go through neighbors
+					v = l.get(i);
+					
+					// We update v and add him to the queue if the following occur:
+					// --> We haven't visited it
+					// --> The source hasn't been visited or dist(source, v) <= dist(source, sink)
+					if(dist[v] == -1 && (dist[sink] == -1 || dist[head] < dist[sink])) {
+						dist[v] = dist[head] + 1;
+						
+						// We only need to add v to the queue if dist(source, v) < dist(source, sink)
+						if(dist[sink] == -1 || dist[v] < dist[sink]) queue.add(v);
+					}
+				}
+			}
+			
+			return dist;
+		}	
+	
+	// Auxiliary method for HopcroftKarp: DFS phase
+	public boolean HopcroftKarpDFS(int v, int[] dist) {
+		// Case v == sink
+		if (v == sink) return true;
+		
+		// Case v == source
+		if (v == source) {
+			// Go through the neighbors, reverse the edge if a path was found
+			ArrayList<Integer> l = lovers(v);
+			for (int i = 0; i < l.size(); i++) {
+				if (HopcroftKarpDFS(l.get(i), dist)) addEdge(l.get(i), v);
+			}
+			
+			return true; // BFS done before guarantees there will be a path
+		}
+		
+		// Case v != source, sink
+		// To save some recursive calls, we'll use the fact vertices in the second set only have one neighbor
+		// Therefore, assume v is in the first set
+		else {
+			ArrayList<Integer> l = lovers(v); // List of neighbors
+			int n, nn = 0; // Variables we'll use
+			
+			// Go through neighbors
+			for (int i = 0; i < l.size(); i++) {
+				n = l.get(i); // The current neighbor of v we're looking at
+				nn = lovers(n).get(0); // The (only) neighbor of n
+				
+				// If dist[nn] is correct and DFS starting at nn finds a path,
+				// we reverse the edges and return 'true'
+				if (dist[nn] == dist[v] + 2 && HopcroftKarpDFS(nn, dist)) {
+					addEdge(nn, n);
+					addEdge(n, v);
+					return true;
+				}
+			}
+			
+			// If there is no path from any of the neighbors, then we return false
+			// To avoid returning here (in another DFS call), we change dist[v] to -1
+			dist[v] = -1;
+			return false;
+		}
+	}
+	
 	// Receives a list of vertices that form a path from source to sink and inverts it
 	public void invertPath(LinkedList<Integer> path) {
 		// First vertex is the sink
@@ -220,9 +302,6 @@ public class BipGSS_Matrix implements BipGSS {
 		}
 		// Last edge is the source
 		t[path.getFirst()-L] = -1;
-		
-		// Make path empty
-		path.clear();
 		
 		return;
 	}
@@ -242,7 +321,7 @@ public class BipGSS_Matrix implements BipGSS {
 					string += "\n";
 					b = false;
 				}
-				string += "--> " + i + " ---[" + E[i][j-L] + "]---> " + j + "\n";
+				string += i + " ---> " + j + "\n";
 			}
 		}
 		if (b) string += " None!\n";
@@ -257,7 +336,7 @@ public class BipGSS_Matrix implements BipGSS {
 					string += "\n";
 					b = false;
 				}
-				string += "--> " + i + " <---[" + -E[i][j-L] + "]--- " + j + "\n";
+				string += i + " <--- " + j + "\n";
 			}
 		}
 		if (b) string += " None!\n";
@@ -271,8 +350,8 @@ public class BipGSS_Matrix implements BipGSS {
 				string += "\n";
 				b = false;
 			}
-			if (s[i] > 0) string += "--> " + source + " ---[" + s[i] + "]---> " + i + "\n";
-			if (s[i] < 0) string += "--> " + source + " <---[" + -s[i] + "]--- " + i + "\n";
+			if (s[i] > 0) string += source + " ---> " + i + "\n";
+			if (s[i] < 0) string += source + " <--- " + i + "\n";
 		}
 		if (b) string += " None!\n";
 		
@@ -285,8 +364,8 @@ public class BipGSS_Matrix implements BipGSS {
 				string += "\n";
 				b = false;
 			}
-			if (t[i-L] > 0) string += "--> " + i + " ---[" + t[i-L] + "]---> " + sink + "\n";
-			if (t[i-L] < 0) string += "--> " + i + " <---[" + -t[i-L] + "]--- " + sink + "\n";
+			if (t[i-L] > 0) string += i + " ---> " + sink + "\n";
+			if (t[i-L] < 0) string += i + " <--- " + sink + "\n";
 		}
 		if (b) string += " None!\n";
 		

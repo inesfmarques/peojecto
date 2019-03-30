@@ -41,6 +41,21 @@ public interface BipGSS {
 	LinkedList<Integer> dfs();
 	
 	// Receives a list of vertices that form a path from source to sink and inverts it
-	// path is destroyed into an empty list
+	// 
+	// [WARNING] path may be changed in the process
 	void invertPath(LinkedList<Integer> path);
+	
+	// Auxiliary method for Hopcroft-Karp
+	// Returns an array with L+R+2 entries containing the distances of each vertex to the source
+	// The i-th entry is dist(i, source)
+	// If i cannot be reached from source or is bigger than dist(sink, source), the entry is -1
+	int[] HopcroftKarpBFS();
+	
+	// Auxiliary method for Hopcroft-Karp
+	// Receives a vertex v and an array of distances dist
+	// Checks if there is a path from u to sink such that dist along that path never decreases
+	// If there is, returns 'true' and inverts it. Otherwise, returns 'false'
+	// 
+	// [WARNING] dist may be changed in the process
+	boolean HopcroftKarpDFS(int v, int[] dist);
 }

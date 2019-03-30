@@ -43,23 +43,22 @@ public class BipG_Matrix implements BipG{
 		return;
 	}
 	
-	// Adds directed edges from vertex l to vertices in array r_array
-	public void addEdge(int l, int[] r_array) {
-		for (int i = 0; i < r_array.length; i++) this.addEdge(l, r_array[i]);
+	// Adds directed edges from vertex l to vertices in array rArray
+	public void addEdge(int l, int[] rArray) {
+		for (int i = 0; i < rArray.length; i++) this.addEdge(l, rArray[i]);
 		return;
 	}
 	
 	// Returns 'true' if there is an edge from l to r, 'false' otherwise
 	public boolean edgeQ(int l, int r) {
 		if(l < L && r >= L && r < L+R) return E[l][r-L] == 1;
-		if(r < L && l >= L && l < L+R) return E[r][l-L] == -11;
+		if(r < L && l >= L && l < L+R) return E[r][l-L] == -1;
 		return false;
 	}
 	
 	// Returns a list with the descendants of vertex v
 	public ArrayList<Integer> lovers(int v){
 		ArrayList<Integer> result = new ArrayList<Integer>();
-		
 		if (v < L) {
 			for(int j=L; j<L+R; j++) {
 				if(E[v][j-L] > 0) result.add(j);
@@ -74,7 +73,6 @@ public class BipG_Matrix implements BipG{
 	
 	// Finds a maximum bipartite matching using Edmonds-Karp
 	public LinkedList<int[]> EdmondsKarp() {
-		
 		// Graph with source and sink added
 		BipGSS_Matrix ResidualGraph = new BipGSS_Matrix(this);
 		
@@ -97,6 +95,7 @@ public class BipG_Matrix implements BipG{
 		return result;
 	}
 	
+	// Finds a maximum bipartite matching using Ford-Fulkerson with DFS
 	public LinkedList<int[]> FordFulkerson() {
 		// Graph with source and sink added
 		BipGSS_Matrix ResidualGraph = new BipGSS_Matrix(this);
@@ -106,7 +105,8 @@ public class BipG_Matrix implements BipG{
 		while(!path.isEmpty()) {
 			ResidualGraph.invertPath(path);
 			path = ResidualGraph.dfs();
-		}		
+		}
+		
 		// Create list with results
 		LinkedList<int[]> result = new LinkedList<int[]>();
 		for (int i = 0; i < ResidualGraph.getL(); i++) {
@@ -118,6 +118,33 @@ public class BipG_Matrix implements BipG{
 			}
 		}
 		return result;		
+	}
+	
+	public LinkedList<int[]> HopcroftKarp() {
+		// Graph with source and sink added
+		BipGSS_Matrix ResidualGraph = new BipGSS_Matrix(this);
+		
+		// BFS: get distances to source
+		int[] dist = ResidualGraph.HopcroftKarpBFS();
+		
+		// Repeat DFS + BFS until we can't reach the sink
+		while(dist[ResidualGraph.getSink()] != -1) {
+			ResidualGraph.HopcroftKarpDFS(ResidualGraph.getSource(), dist);
+			dist = ResidualGraph.HopcroftKarpBFS();
+		}
+		
+		// Create list with results
+		LinkedList<int[]> result = new LinkedList<int[]>();
+		for (int i = 0; i < ResidualGraph.getL(); i++) {
+			for (int j = ResidualGraph.L; j < ResidualGraph.getL() + ResidualGraph.getR(); j++) {
+				if (ResidualGraph.edgeQ(j, i)) {
+					result.add(new int[] {i,j});
+					continue;
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	// toString method
@@ -135,7 +162,7 @@ public class BipG_Matrix implements BipG{
 					string += "\n";
 					b = false;
 				}
-				string += "--> " + i + " ---[" + E[i][j-L] + "]---> " + j + "\n";
+				string += i + " ---> " + j + "\n";
 			}
 		}
 		if (b) string += " None!\n";
@@ -150,7 +177,7 @@ public class BipG_Matrix implements BipG{
 					string += "\n";
 					b = false;
 				}
-				string += "--> " + i + " <---[" + -E[i][j-L] + "]---> " + j + "\n";
+				string += i + " <--- " + j + "\n";
 			}
 		}
 		if (b) string += " None!\n";
