@@ -3,7 +3,6 @@
 package bgraph;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public interface BipG {
 	// Bipartite graph has two sets of vertices, {0, ... , n-1} (left set) and {n, ... , n+m-1} (right set)
@@ -31,11 +30,11 @@ public interface BipG {
 	ArrayList<Integer> lovers(int v);
 	
 	// Finds a maximum bipartite matching using Edmonds-Karp (that is, Ford-Fulkerson and BFS to improve matchings)
-	LinkedList<int[]> EdmondsKarp();
+	ArrayList<int[]> EdmondsKarp();
 	
 	// Finds a maximum bipartite matching using Ford-Fulkerson with DFS to improve matchings
-	LinkedList<int[]> FordFulkerson();
+	ArrayList<int[]> FordFulkerson();
 	
 	// Finds a maximum bipartite matching using Hopcroft-Karp (that is, BFS and DFS to improve matchings)
-	LinkedList<int[]> HopcroftKarp();
+	ArrayList<int[]> HopcroftKarp();
 }

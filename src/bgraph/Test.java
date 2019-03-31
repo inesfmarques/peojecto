@@ -1,11 +1,11 @@
 package bgraph;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class Test {
 
 	public static void main(String[] args) {
-		BipG G = new BipG_Matrix(10, 7);
+		BipG G = new BipG_List(10, 13);
 		
 		G.addEdge(0, new int[] {13,14,17,20});
 		G.addEdge(1, new int[] {10,11,12,17,19});
@@ -28,7 +28,7 @@ public class Test {
 		System.out.println("Starting graph:");
 		System.out.print(G);
 		System.out.println();
-		LinkedList<int[]> results = G.FordFulkerson();
+		ArrayList<int[]> results = G.HopcroftKarp();
 		System.out.println("Result: ");
 		for (int i = 0; i < results.size(); i++) {
 			System.out.println(Arrays.toString(results.get(i)));

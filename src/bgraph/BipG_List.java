@@ -1,78 +1,58 @@
-// Implementation of BipG with adjacency matrix
+// Implementation of BipG with adjacency lists
 
 package bgraph;
 
 import java.util.ArrayList;
 
-public class BipG_Matrix implements BipG{
+public class BipG_List implements BipG {
 	int L; // Number of vertices on the left set
 	int R; // Number of vertices on the right set
 	
-	// L x R matrix
-	// Entry (i,j) represents the edge from i to j+L: 1 if edge goes from i to j+L; -1 otherwise
-	int[][] E;
+	// Array of adjacency lists
+	// The i-th position is a list with the neighbors of vertex i
+	ArrayList<Integer>[] adjacencyList;
 	
 	// Constructor
-	public BipG_Matrix(int n, int m) {
+	public BipG_List(int n, int m) {
 		L = n;
 		R = m;
-		E = new int[L][R];
-		for(int i = 0; i < L; i++) {
-			for(int j = 0; j < R; j++) {
-				E[i][j] = 0;
-			}
-		}
+		adjacencyList = new ArrayList[L+R];
+		for (int i = 0; i < L+R; i++) adjacencyList[i] = new ArrayList<Integer>();
 	}
 	
-	// Return size of left set
 	public int getL() {
 		return L;
 	}
-	
-	// Return size of right set
+
 	public int getR() {
 		return R;
 	}
-	
-	// Adds directed edge from vertex l to vertex r
+
 	public void addEdge(int l, int r) {
-		if(l < L && r >= L && r < L+R) E[l][r-L] = 1;	
-		if(r < L && l >= L && l > L+R) E[r][l-L] = -1;
-		return;
-	}
-	
-	// Adds directed edges from vertex l to vertices in array rArray
-	public void addEdge(int l, int[] rArray) {
-		for (int i = 0; i < rArray.length; i++) this.addEdge(l, rArray[i]);
-		return;
-	}
-	
-	// Returns 'true' if there is an edge from l to r, 'false' otherwise
-	public boolean edgeQ(int l, int r) {
-		if(l < L && r >= L && r < L+R) return E[l][r-L] == 1;
-		if(r < L && l >= L && l < L+R) return E[r][l-L] == -1;
-		return false;
-	}
-	
-	// Returns a list with the descendants of vertex v
-	public ArrayList<Integer> lovers(int v){
-		ArrayList<Integer> result = new ArrayList<Integer>();
-		if (v < L) {
-			for(int j=L; j<L+R; j++) {
-				if(E[v][j-L] > 0) result.add(j);
-			}
-		} else if (v >= L && v < L+R) {
-			for(int i=0; i<L; i++) {
-				if(E[i][v-L] < 0) result.add(i);
-			}
+		if (!adjacencyList[l].contains(r)) {
+			adjacencyList[l].add(r);
+			adjacencyList[r].remove((Integer) l);
 		}
-		return result;
+		return;
 	}
-	
+
+	public void addEdge(int l, int[] rArray) {
+		for (int i = 0; i < rArray.length; i++) addEdge(l, rArray[i]);
+		return;
+	}
+
+	public boolean edgeQ(int l, int r) {
+		return adjacencyList[l].contains(r);
+	}
+
+	public ArrayList<Integer> lovers(int v) {
+		return adjacencyList[v];
+	}
+
 	// Finds a maximum bipartite matching using Edmonds-Karp
 	public ArrayList<int[]> EdmondsKarp() {
 		// Graph with source and sink added
-		BipGSS ResidualGraph = new BipGSS_Matrix(this);
+		BipGSS ResidualGraph = new BipGSS_List(this);
 		
 		// Do the cycle: find a path, then reverse it
 		ArrayList<Integer> path = ResidualGraph.bfs();		
@@ -96,7 +76,7 @@ public class BipG_Matrix implements BipG{
 	// Finds a maximum bipartite matching using Ford-Fulkerson with DFS
 	public ArrayList<int[]> FordFulkerson() {
 		// Graph with source and sink added
-		BipGSS ResidualGraph = new BipGSS_Matrix(this);
+		BipGSS ResidualGraph = new BipGSS_List(this);
 		
 		// Do the cycle: find a path, then reverse it
 		ArrayList<Integer> path = ResidualGraph.dfs();		
@@ -120,7 +100,7 @@ public class BipG_Matrix implements BipG{
 	
 	public ArrayList<int[]> HopcroftKarp() {
 		// Graph with source and sink added
-		BipGSS ResidualGraph = new BipGSS_Matrix(this);
+		BipGSS ResidualGraph = new BipGSS_List(this);
 		
 		// BFS: get distances to source
 		int[] dist = ResidualGraph.HopcroftKarpBFS();
@@ -155,7 +135,7 @@ public class BipG_Matrix implements BipG{
 		string += "Edges from set 1 to set 2:";
 		for(int i = 0; i < L; i++) {
 			for(int j = L; j < L+R; j++) {
-				if (E[i][j-L] <= 0) continue;
+				if (!edgeQ(i, j)) continue;
 				if (b) {
 					string += "\n";
 					b = false;
@@ -170,7 +150,7 @@ public class BipG_Matrix implements BipG{
 		string += "Edges from set 2 to set 1:";
 		for(int i = 0; i < L; i++) {
 			for(int j = L; j < L+R; j++) {
-				if (E[i][j-L] >= 0) continue;
+				if (!edgeQ(j, i)) continue;
 				if (b) {
 					string += "\n";
 					b = false;

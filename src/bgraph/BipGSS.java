@@ -3,7 +3,6 @@
 package bgraph;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public interface BipGSS {
 	// Bipartite graph has two sets of vertices, {0, ... , n-1} (left set) and {n, ... , n+m-1} (right set)
@@ -24,6 +23,10 @@ public interface BipGSS {
 	// Return id of sink
 	int getSink();
 	
+	// Adds directed edge from vertex l to vertex r
+	// Does nothing if l and r are in the same set
+	void addEdge(int l, int r);	
+	
 	// Returns 'true' if there is an edge from l to r, 'false' otherwise
 	boolean edgeQ(int l, int r);
 	
@@ -33,17 +36,15 @@ public interface BipGSS {
 	// Finds a path from source to sink through BFS
 	// Returns the list of vertex labels that form the path
 	// Returns an empty list if no such path exists
-	LinkedList<Integer> bfs();
+	ArrayList<Integer> bfs();
 	
 	// Finds a path from source to sink through DFS
 	// Returns the list of vertex labels that form the path
 	// Returns an empty list if no such path exists
-	LinkedList<Integer> dfs();
+	ArrayList<Integer> dfs();
 	
 	// Receives a list of vertices that form a path from source to sink and inverts it
-	// 
-	// [WARNING] path may be changed in the process
-	void invertPath(LinkedList<Integer> path);
+	void invertPath(ArrayList<Integer> path);
 	
 	// Auxiliary method for Hopcroft-Karp
 	// Returns an array with L+R+2 entries containing the distances of each vertex to the source
