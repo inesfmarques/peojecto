@@ -26,12 +26,12 @@ public class BipGSS_List implements BipGSS {
 		
 		adjacencyList = new ArrayList[L+R+2];
 		for (int i = 0; i < L+R; i++) {
-			adjacencyList[i] = G.lovers(i);
-			if (i >= L) adjacencyList[i].add(sink);
+			adjacencyList[i] = new ArrayList<Integer>(G.lovers(i));
+			if (i >= L) adjacencyList[i].add((Integer) sink);
 		}
 		
 		adjacencyList[L+R] = new ArrayList<Integer>();
-		for (int i = 0; i < L; i++) adjacencyList[L+R].add(i);
+		for (int i = 0; i < L; i++) adjacencyList[L+R].add((Integer) i);
 		
 		adjacencyList[L+R+1] = new ArrayList<Integer>();
 	}

@@ -27,6 +27,8 @@ public interface BipG {
 	boolean edgeQ(int l, int r);
 	
 	// Returns a list with the descendants of vertex v
+	//
+	// [WARNING] Changing the output of this method may change the matrix!
 	ArrayList<Integer> lovers(int v);
 	
 	// Finds a maximum bipartite matching using Edmonds-Karp (that is, Ford-Fulkerson and BFS to improve matchings)

@@ -31,6 +31,8 @@ public interface BipGSS {
 	boolean edgeQ(int l, int r);
 	
 	// Returns a list with the descendants of vertex v
+	//
+	// [WARNING] Changing the output of this method may change the matrix!
 	ArrayList<Integer> lovers(int v);
 	
 	// Finds a path from source to sink through BFS
