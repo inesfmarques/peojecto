@@ -1,0 +1,84 @@
+[SETTINGS]
+N = 1000
+min = 200
+max = 400
+p = {0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 0.9, 0.95}
+seed = 1
+
+[OUTPUT]
+Starting tests:
+--> Performing tests for p = 0.05...
+    Done!
+--> Performing tests for p = 0.1...
+    Done!
+--> Performing tests for p = 0.2...
+    Done!
+--> Performing tests for p = 0.4...
+    Done!
+--> Performing tests for p = 0.6...
+    Done!
+--> Performing tests for p = 0.8...
+    Done!
+--> Performing tests for p = 0.9...
+    Done!
+--> Performing tests for p = 0.95...
+    Done!
+Tests done!
+--> For p = 0.05 the average times were
+    38.439 milliseconds for EdmondsKarp() on matrix implementation
+    10.217 milliseconds for FordFulkerson() on matrix implementation
+    3.704 milliseconds for HopcroftKarp() on matrix implementation
+    4.401 milliseconds for EdmondsKarp() on adjacency lists implementation
+    1.596 milliseconds for FordFulkerson() on adjacency lists implementation
+    0.375 milliseconds for HopcroftKarp() on adjacency lists implementation
+--> For p = 0.1 the average times were
+    52.549 milliseconds for EdmondsKarp() on matrix implementation
+    11.271 milliseconds for FordFulkerson() on matrix implementation
+    4.935 milliseconds for HopcroftKarp() on matrix implementation
+    6.442 milliseconds for EdmondsKarp() on adjacency lists implementation
+    2.516 milliseconds for FordFulkerson() on adjacency lists implementation
+    0.518 milliseconds for HopcroftKarp() on adjacency lists implementation
+--> For p = 0.2 the average times were
+    83.268 milliseconds for EdmondsKarp() on matrix implementation
+    12.32 milliseconds for FordFulkerson() on matrix implementation
+    8.16 milliseconds for HopcroftKarp() on matrix implementation
+    10.765 milliseconds for EdmondsKarp() on adjacency lists implementation
+    3.392 milliseconds for FordFulkerson() on adjacency lists implementation
+    0.999 milliseconds for HopcroftKarp() on adjacency lists implementation
+--> For p = 0.4 the average times were
+    133.753 milliseconds for EdmondsKarp() on matrix implementation
+    12.714 milliseconds for FordFulkerson() on matrix implementation
+    13.581 milliseconds for HopcroftKarp() on matrix implementation
+    17.84 milliseconds for EdmondsKarp() on adjacency lists implementation
+    3.58 milliseconds for FordFulkerson() on adjacency lists implementation
+    1.935 milliseconds for HopcroftKarp() on adjacency lists implementation
+--> For p = 0.6 the average times were
+    155.441 milliseconds for EdmondsKarp() on matrix implementation
+    12.055 milliseconds for FordFulkerson() on matrix implementation
+    19.047 milliseconds for HopcroftKarp() on matrix implementation
+    25.144 milliseconds for EdmondsKarp() on adjacency lists implementation
+    3.674 milliseconds for FordFulkerson() on adjacency lists implementation
+    2.86 milliseconds for HopcroftKarp() on adjacency lists implementation
+--> For p = 0.8 the average times were
+    155.031 milliseconds for EdmondsKarp() on matrix implementation
+    11.314 milliseconds for FordFulkerson() on matrix implementation
+    24.372 milliseconds for HopcroftKarp() on matrix implementation
+    33.771 milliseconds for EdmondsKarp() on adjacency lists implementation
+    3.991 milliseconds for FordFulkerson() on adjacency lists implementation
+    3.979 milliseconds for HopcroftKarp() on adjacency lists implementation
+--> For p = 0.9 the average times were
+    148.78 milliseconds for EdmondsKarp() on matrix implementation
+    12.523 milliseconds for FordFulkerson() on matrix implementation
+    26.953 milliseconds for HopcroftKarp() on matrix implementation
+    37.236 milliseconds for EdmondsKarp() on adjacency lists implementation
+    4.536 milliseconds for FordFulkerson() on adjacency lists implementation
+    4.405 milliseconds for HopcroftKarp() on adjacency lists implementation
+--> For p = 0.95 the average times were
+    143.795 milliseconds for EdmondsKarp() on matrix implementation
+    15.324 milliseconds for FordFulkerson() on matrix implementation
+    27.401 milliseconds for HopcroftKarp() on matrix implementation
+    38.398 milliseconds for EdmondsKarp() on adjacency lists implementation
+    5.364 milliseconds for FordFulkerson() on adjacency lists implementation
+    4.628 milliseconds for HopcroftKarp() on adjacency lists implementation
+
+PROCESS TERMINATED
