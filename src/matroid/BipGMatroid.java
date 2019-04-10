@@ -112,7 +112,7 @@ public class BipGMatroid implements Matroid<int[]> {
 	public boolean belongsTo(ArrayList<int[]> set, int[] x, int[] y) {
 		// Check if any edge in (set \ {y}) has the same ending as x
 
-		int L = G.getL(), R = G.getR(), v;
+		int L = G.getL(), v;
 		
 		// Different cases according to 'side'
 		if (side) {
