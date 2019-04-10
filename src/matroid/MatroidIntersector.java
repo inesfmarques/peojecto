@@ -10,7 +10,7 @@ import bgraph.*;
 
 public class MatroidIntersector<Type> {
 	
-	// Computes a maximal set in two arrays
+	// Computes a maximal set in both matroids
 	// It is assumed they have the same ground set
 	public ArrayList<Type> intersection(Matroid<Type> m, Matroid<Type> n){
 		
