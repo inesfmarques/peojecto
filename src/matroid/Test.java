@@ -53,17 +53,20 @@ public class Test {
 		System.out.println("]");
 		*/
 		
-		BipG G = new BipG_List(6, 5);
-		
-		G.addEdge(0, 10);
-		G.addEdge(2, 9);
-		G.addEdge(3, 7);
-		G.addEdge(3, 9);
-		G.addEdge(4, 7);
-		G.addEdge(4, 10);
+		BipG G = new BipG_List(10, 2);
+		G.addEdge(0, new int[] {10,11});
+		G.addEdge(1, new int[] {10});
 		
 		Matroid<int[]> m = new BipGMatroid(G, true);
 		Matroid<int[]> n = new BipGMatroid(G, false);
+		
+		ArrayList<int[]> set = new ArrayList<int[]>();
+		set.add(new int[] {0,10});
+		set.add(new int[] {0,11});
+		System.out.println(m.belongsTo(set, new int[] {1,10}, new int[] {0,10}));
+		System.out.println(n.belongsTo(set, new int[] {1,10}, new int[] {0,10}));
+		
+		
 		MatroidIntersector<int[]> intersector = new MatroidIntersector<int[]>();
 		ArrayList<int[]> pairing = intersector.intersection(m, n);
 		// Print pairing

@@ -6,7 +6,6 @@ package matroid;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-import bgraph.*;
 
 public class MatroidIntersector<Type> {
 	
@@ -29,7 +28,7 @@ public class MatroidIntersector<Type> {
 		Queue<Integer> queue;
 		ArrayList<Integer> lovers;
 		ArrayList<Type> maximalSetNew, maximalSetCNew;
-		BipG G;	
+		BipGMI G;	
 		
 		// Improve 'maximalSet'
 		maximalSetWhile:
@@ -41,12 +40,12 @@ public class MatroidIntersector<Type> {
 			// --> [If maximalSetSize <= i < groundSetSize] the (i - maximalSetSize)-th element of 'maximalSetC'
 			
 			// Build the graph
-			G = new BipG_List(maximalSetSize, groundSetSize - maximalSetSize);				
+			G = new BipGMI(maximalSetSize, groundSetSize - maximalSetSize);				
 			
-			for (int i = 0; i < groundSetSize; i++) {
-				for (int j = 0; j < maximalSetSize - groundSetSize; j++) {
-					if (m.belongsTo(maximalSet, maximalSetC.get(j), maximalSet.get(i))) G.addEdge(i, j + groundSetSize);
-					if (n.belongsTo(maximalSet, maximalSetC.get(j), maximalSet.get(i))) G.addEdge(j + groundSetSize, i);
+			for (int i = 0; i < maximalSetSize; i++) {
+				for (int j = maximalSetSize; j < groundSetSize; j++) {
+					if (m.belongsTo(maximalSet, maximalSetC.get(j - maximalSetSize), maximalSet.get(i))) G.addEdge(i, j);
+					if (n.belongsTo(maximalSet, maximalSetC.get(j - maximalSetSize), maximalSet.get(i))) G.addEdge(j, i);
 				}
 			}
 			
