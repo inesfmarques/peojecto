@@ -1,7 +1,7 @@
 package bwgraph;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 
 public class Test {
 
@@ -40,7 +40,7 @@ public class Test {
 		System.out.println("Starting graph:");
 		System.out.print(G);
 		System.out.println();
-		LinkedList<int[]> results = G.MaxFlow();
+		ArrayList<int[]> results = G.MatchingDijkstra();
 		System.out.println("Result: ");
 		for (int i = 0; i < results.size(); i++) {
 			System.out.println(Arrays.toString(results.get(i)));

@@ -3,7 +3,6 @@
 package bwgraph;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public interface BipWGSS {
 	// Bipartite graph has two sets of vertices, {0, ... , n-1} (left set) and {n, ... , n+m-1} (right set)
@@ -20,9 +19,12 @@ public interface BipWGSS {
 	
 	// Return id of source
 	int getSource();
-	
+		
 	// Return id of sink
 	int getSink();
+	
+	// Return visited
+	void setVisited();
 	
 	// Returns weight of edge from i to j
 	// Returns 0 if no such edge exists
@@ -39,12 +41,26 @@ public interface BipWGSS {
 	// Returns a list with the descendants of vertex v
 	ArrayList<Integer> lovers(int v);
 	
+	// Receives a vertex v and an array of distances dist
+	// Checks if there is a path from u to sink such that dist along that path never decreases
+	// If there is, returns 'true' and inverts it. Otherwise, returns 'false'
+	boolean invertPathBF(int v, int[] dist);
+	
 	// Finds a path from source to sink through Bellman-Ford to minimize the cost
-	// Returns the list of vertex labels that form the path
-	// Returns an empty list if no such path exists
-	LinkedList<Integer> BellmanFord();
-			
-	// Receives a list of vertices that form a path from source to sink and inverts it
-	// path is destroyed into an empty list
-	void invertPath(LinkedList<Integer> path);
+	// Returns the list of distances to the source
+	int[] BellmanFord();
+	
+	// Receives a vertex v, an array of distances dist and an array of function values h
+	// Checks if there is a path from u to sink such that dist along that path never decreases
+	// If there is, returns 'true' and inverts it. Otherwise, returns 'false'
+	boolean invertPathDijkstra(int v, int[] dist, int[] h);
+	
+	// Finds a path from source to sink through Dijkstra to minimize the cost
+	// Returns the list of distances to the source
+	int[] Dijkstra(int[] h);
+	
+	// Finds a path from source to sink through Dijkstra to minimize the cost using Priority Queue
+	// Returns the list of distances to the source
+	int[] DijkstraPQ(int[] h);
+		
 }

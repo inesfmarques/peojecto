@@ -3,7 +3,7 @@
 package bwgraph;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Arrays;
 
 public class BipWG_Matrix implements BipWG{
 	int L; // Number of vertices on the left set
@@ -80,30 +80,111 @@ public class BipWG_Matrix implements BipWG{
 	}
 	
 	// Finds a maximum bipartite matching using MaxFlow and BellmanFord
-		public LinkedList<int[]> MaxFlow() {
-			
-			// Graph with source and sink added
-			BipWGSS_Matrix ResidualGraph = new BipWGSS_Matrix(this);
-			
-			// Do the cycle: find a path, then reverse it
-			LinkedList<Integer> path = ResidualGraph.BellmanFord();		
-			while(!path.isEmpty()) {
-				ResidualGraph.invertPath(path);
-				path = ResidualGraph.BellmanFord();
-			}		
-			// Create list with results
-			LinkedList<int[]> result = new LinkedList<int[]>();
-			for (int i = 0; i < ResidualGraph.L; i++) {
-				for (int j = ResidualGraph.L; j < ResidualGraph.L + ResidualGraph.R; j++) {
-					if (ResidualGraph.edgeQ(j, i)) {
-						result.add(new int[] {i,j});
-						continue;
-					}
+	public ArrayList<int[]> MatchingBellmanFord() {
+		// Graph with source and sink added
+		BipWGSS ResidualGraph = new BipWGSS_Matrix(this);
+		
+		// BF: get distances to source
+		int[] dist = ResidualGraph.BellmanFord();
+		
+		// Repeat DFS + BF until we can't reach the sink
+		while(dist[ResidualGraph.getSink()] != Integer.MAX_VALUE) {
+			while(ResidualGraph.invertPathBF(ResidualGraph.getSource(), dist)) {
+				ResidualGraph.setVisited();
+			}
+			dist = ResidualGraph.BellmanFord();
+			ResidualGraph.setVisited();
+		}
+		
+		// Create list with results
+		ArrayList<int[]> result = new ArrayList<int[]>();
+		for (int i = 0; i < ResidualGraph.getL(); i++) {
+			for (int j = ResidualGraph.getL(); j < ResidualGraph.getL() + ResidualGraph.getR(); j++) {
+				if (ResidualGraph.edgeQ(j, i)) {
+					result.add(new int[] {i,j});
+					continue;
 				}
 			}
-			return result;
 		}
+		
+		return result;
+	}
 	
+	// Finds a maximum bipartite matching using MaxFlow and Dijkstra
+	public ArrayList<int[]> MatchingDijkstra() {
+		// Graph with source and sink added
+		BipWGSS ResidualGraph = new BipWGSS_Matrix(this);
+		
+		// BF: get distances to source
+		int[] h = ResidualGraph.BellmanFord();
+		while(ResidualGraph.invertPathBF(ResidualGraph.getSource(), h)) {
+			ResidualGraph.setVisited();
+		}
+		ResidualGraph.setVisited();
+		
+		//Apply Dijkstra with changed weights
+		int[] dist = ResidualGraph.Dijkstra(h);
+		// Repeat DFS + Dijkstra until we can't reach the sink
+		while(dist[ResidualGraph.getSink()] != Integer.MAX_VALUE) {
+			while(ResidualGraph.invertPathDijkstra(ResidualGraph.getSource(), dist, h)) {
+				ResidualGraph.setVisited();
+			}
+			h = dist;
+			dist = ResidualGraph.Dijkstra(h);
+			ResidualGraph.setVisited();
+		}
+		
+		// Create list with results
+		ArrayList<int[]> result = new ArrayList<int[]>();
+		for (int i = 0; i < ResidualGraph.getL(); i++) {
+			for (int j = ResidualGraph.getL(); j < ResidualGraph.getL() + ResidualGraph.getR(); j++) {
+				if (ResidualGraph.edgeQ(j, i)) {
+					result.add(new int[] {i,j});
+					continue;
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	
+	public ArrayList<int[]> MatchingDijkstraPQ() {
+		// Graph with source and sink added
+		BipWGSS ResidualGraph = new BipWGSS_Matrix(this);
+		
+		// BF: get distances to source
+		int[] h = ResidualGraph.BellmanFord();
+		while(ResidualGraph.invertPathBF(ResidualGraph.getSource(), h)) {
+			ResidualGraph.setVisited();
+		}
+		ResidualGraph.setVisited();
+		
+		//Apply Dijkstra with changed weights
+		int[] dist = ResidualGraph.DijkstraPQ(h);
+		// Repeat DFS + Dijkstra until we can't reach the sink
+		while(dist[ResidualGraph.getSink()] != Integer.MAX_VALUE) {
+			while(ResidualGraph.invertPathDijkstra(ResidualGraph.getSource(), dist, h)) {
+				ResidualGraph.setVisited();
+			}
+			h = dist;
+			dist = ResidualGraph.DijkstraPQ(h);
+			ResidualGraph.setVisited();
+		}
+		
+		// Create list with results
+		ArrayList<int[]> result = new ArrayList<int[]>();
+		for (int i = 0; i < ResidualGraph.getL(); i++) {
+			for (int j = ResidualGraph.getL(); j < ResidualGraph.getL() + ResidualGraph.getR(); j++) {
+				if (ResidualGraph.edgeQ(j, i)) {
+					result.add(new int[] {i,j});
+					continue;
+				}
+			}
+		}
+		
+		return result;
+	}
 	
 	// toString method
 	public String toString() {

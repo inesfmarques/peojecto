@@ -3,7 +3,6 @@
 package bwgraph;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class BipWG_List implements BipWG {
 	int L; // Number of vertices on the left set
@@ -27,7 +26,7 @@ public class BipWG_List implements BipWG {
 		for (int i = 0; i < L+R; i++) adjacencyList[i] = new ArrayList<Integer>();
 		
 		weightsList = new ArrayList[L+R];
-		for (int i = 0; i < L+R; i++) adjacencyList[i] = new ArrayList<Integer>();
+		for (int i = 0; i < L+R; i++) weightsList[i] = new ArrayList<Integer>();
 	}
 
 	// Return size of left set
@@ -92,11 +91,111 @@ public class BipWG_List implements BipWG {
 	public ArrayList<Integer> lovers(int v) {
 		return adjacencyList[v];
 	}
-
-	@Override
-	public LinkedList<int[]> MaxFlow() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	// Finds a maximum bipartite matching using MaxFlow and BellmanFord
+	public ArrayList<int[]> MatchingBellmanFord() {
+		// Graph with source and sink added
+		BipWGSS ResidualGraph = new BipWGSS_List(this);
+		
+		// BF: get distances to source
+		int[] dist = ResidualGraph.BellmanFord();
+		
+		// Repeat DFS + BF until we can't reach the sink
+		while(dist[ResidualGraph.getSink()] != Integer.MAX_VALUE) {
+			while(ResidualGraph.invertPathBF(ResidualGraph.getSource(), dist)) {
+				ResidualGraph.setVisited();
+			}
+			dist = ResidualGraph.BellmanFord();
+			ResidualGraph.setVisited();
+		}
+		
+		// Create list with results
+		ArrayList<int[]> result = new ArrayList<int[]>();
+		for (int i = 0; i < ResidualGraph.getL(); i++) {
+			for (int j = ResidualGraph.getL(); j < ResidualGraph.getL() + ResidualGraph.getR(); j++) {
+				if (ResidualGraph.edgeQ(j, i)) {
+					result.add(new int[] {i,j});
+					continue;
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	// Finds a maximum bipartite matching using MaxFlow and Dijkstra
+	public ArrayList<int[]> MatchingDijkstra() {
+		// Graph with source and sink added
+		BipWGSS ResidualGraph = new BipWGSS_List(this);
+		
+		// BF: get distances to source
+		int[] h = ResidualGraph.BellmanFord();
+		while(ResidualGraph.invertPathBF(ResidualGraph.getSource(), h)) {
+			ResidualGraph.setVisited();
+		}
+		ResidualGraph.setVisited();
+		
+		//Apply Dijkstra with changed weights
+		int[] dist = ResidualGraph.Dijkstra(h);
+		// Repeat DFS + Dijkstra until we can't reach the sink
+		while(dist[ResidualGraph.getSink()] != Integer.MAX_VALUE) {
+			while(ResidualGraph.invertPathDijkstra(ResidualGraph.getSource(), dist, h)) {
+				ResidualGraph.setVisited();
+			}
+			h = dist;
+			dist = ResidualGraph.Dijkstra(h);
+			ResidualGraph.setVisited();
+		}
+		
+		// Create list with results
+		ArrayList<int[]> result = new ArrayList<int[]>();
+		for (int i = 0; i < ResidualGraph.getL(); i++) {
+			for (int j = ResidualGraph.getL(); j < ResidualGraph.getL() + ResidualGraph.getR(); j++) {
+				if (ResidualGraph.edgeQ(j, i)) {
+					result.add(new int[] {i,j});
+					continue;
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	public ArrayList<int[]> MatchingDijkstraPQ() {
+		// Graph with source and sink added
+		BipWGSS ResidualGraph = new BipWGSS_Matrix(this);
+		
+		// BF: get distances to source
+		int[] h = ResidualGraph.BellmanFord();
+		while(ResidualGraph.invertPathBF(ResidualGraph.getSource(), h)) {
+			ResidualGraph.setVisited();
+		}
+		ResidualGraph.setVisited();
+		
+		//Apply Dijkstra with changed weights
+		int[] dist = ResidualGraph.DijkstraPQ(h);
+		// Repeat DFS + Dijkstra until we can't reach the sink
+		while(dist[ResidualGraph.getSink()] != Integer.MAX_VALUE) {
+			while(ResidualGraph.invertPathDijkstra(ResidualGraph.getSource(), dist, h)) {
+				ResidualGraph.setVisited();
+			}
+			h = dist;
+			dist = ResidualGraph.DijkstraPQ(h);
+			ResidualGraph.setVisited();
+		}
+		
+		// Create list with results
+		ArrayList<int[]> result = new ArrayList<int[]>();
+		for (int i = 0; i < ResidualGraph.getL(); i++) {
+			for (int j = ResidualGraph.getL(); j < ResidualGraph.getL() + ResidualGraph.getR(); j++) {
+				if (ResidualGraph.edgeQ(j, i)) {
+					result.add(new int[] {i,j});
+					continue;
+				}
+			}
+		}
+		
+		return result;
 	}
 
 	// toString method
@@ -136,4 +235,5 @@ public class BipWG_List implements BipWG {
 			
 		return string;
 	}
+
 }

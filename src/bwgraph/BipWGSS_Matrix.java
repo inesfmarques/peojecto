@@ -5,12 +5,15 @@ package bwgraph;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class BipWGSS_Matrix implements BipWGSS {
 	int L; // Number of vertices on the left set
 	int R; // Number of vertices on the right set
 	int source; // Label of source (equals L+R)
 	int sink; // Label of sink (equals L+R+1)
+	boolean[] visited; //array of visited vertices for the DFS
 	
 	// L x R x 2 matrix
 	// Entry (i,j) is the pair [d, w] and represents the edge from i to j+L:
@@ -34,6 +37,7 @@ public class BipWGSS_Matrix implements BipWGSS {
 		R = G.getR();
 		source = L+R;
 		sink = L+R+1;
+		visited = new boolean[L+R+2];
 		E = new int[L][R][2];
 		for(int i = 0; i < L; i++) {
 			for(int j = L; j < L+R; j++) {
@@ -77,6 +81,11 @@ public class BipWGSS_Matrix implements BipWGSS {
 	// Return id of sink
 	public int getSink() {
 		return sink;
+	}
+	
+	//Reset visited
+	public void setVisited() {
+		visited = new boolean[L+R+2];
 	}
 	
 	// Returns weight of edge from i to j
@@ -156,94 +165,226 @@ public class BipWGSS_Matrix implements BipWGSS {
 		return result;
 	}
 	
-	public LinkedList<Integer> BellmanFord(){
-		int[] dist = new int[L+R+2];
-		int[] pred = new int[L+R+2];
-		for(int i=0; i<L+R+2; i++) {
-			dist[i] = Integer.MAX_VALUE;
-			pred[i] = -1;
-		}
+	public boolean invertPathBF(int v, int[] dist) {
+		//Mark v as visited
+		visited[v] = true;
 		
-		//Ciclo para descobrir a ordem das arestas
-		ArrayList<int[]> order = new ArrayList<int[]>(); //lista com arestas ordenada
-		//Acrescentar arestas que partem da source para serem as primeiras
-		ArrayList<Integer> l = lovers(source);
-		for(int j=0; j<l.size(); j++) {
-			order.add(new int[] {source,l.get(j)});
-		}
-		//para cada vertice ir buscar os lovers e mete-los por ordem
-		for(int i=0; i<L+R; i++) {
-			l = lovers(i);
-			for(int j=0; j<l.size(); j++) {
-				order.add(new int[] {i,l.get(j)});
-			}
-		}
-		//SE DER MAL ACRESCENTAR ARESTAS QUE PARTEM DO SINK
+		// Case v == sink
+		if (v == sink) return true;
 		
-		/*
-		for(int i=0; i<order.size(); i++) {
-			System.out.println(Arrays.toString(order.get(i)));
-		}
-		*/
-		
-		dist[L+R] = 0;	
-		for(int i=0; i<L+R+1; i++) {
-			int[] copy = Arrays.copyOf(dist, dist.length);
-			for(int j=0; j<order.size(); j++) {
-				int[] a = order.get(j);
-				int u = a[0];
-				int v = a[1];
-				int w = getWeight(u,v);
-				if(dist[u] != Integer.MAX_VALUE && dist[u] + w < dist[v]) {
-					dist[v] = dist[u] + w;
-					pred[v] = u;
+		// Case v == source
+		if (v == source) {
+			// Go through the neighbors, reverse the edge if a path was found
+			ArrayList<Integer> l = lovers(v);
+			for (int i = 0; i < l.size(); i++) {
+				int lover = l.get(i);
+				if (!visited[lover]) {
+					if(invertPathBF(lover, dist)) {
+						addEdge(lover, v, -getWeight(v,lover));
+						return true;
+					}
 				}
 			}
-			if(copy == dist) {break;}
+			return false;
 		}
 		
-		// Build the path
-		LinkedList<Integer> path = new LinkedList<Integer>(); // Where we store the path
-		if(pred[sink] != -1) {
-			path.add(sink);
-			int e = sink;
-			while(e!=source) {
-				path.addFirst(pred[e]);
-				e=pred[e];
+		// Case v != source, sink
+		// To save some recursive calls, we'll use the fact vertices in the second set only have one neighbor
+		// Therefore, assume v is in the first set
+		else {
+			ArrayList<Integer> l = lovers(v); // List of neighbors			
+			// Go through neighbors
+			for (int i = 0; i < l.size(); i++) {
+				int lover = l.get(i); // The current neighbor of v we're looking at
+				int w = getWeight(v,lover);
+				// If dist[lover] is correct and DFS starting at lover finds a path,
+				// we reverse the edges and return 'true'
+				if (!visited[lover] && dist[lover] == dist[v] + w) {
+					if(invertPathBF(lover, dist)) {
+						addEdge(lover, v, -w);
+						return true;
+					}
+				}
 			}
+			// If there is no path from any of the neighbors then we return false
+			return false;
 		}
-		//System.out.println(Arrays.toString(path.toArray()));
-		return path;
 	}
 	
-	
-	// Receives a list of vertices that form a path from source to sink and inverts it
-		public void invertPath(LinkedList<Integer> path) {
-			// First vertex is the sink
-			path.removeFirst();
-			s[path.getFirst()][0] = -1;
-			int i,j;
-			while(path.size() != 2) {
-				i = path.getFirst();
-				j = path.get(1);
-				if (i<j) {
-					E[i][j-L][0] = -E[i][j-L][0];
-					E[i][j-L][1] = -E[i][j-L][1];
-				}
-				else {
-					E[j][i-L][0] = -E[j][i-L][0];
-					E[j][i-L][1] = -E[j][i-L][1];
-				}
-				path.removeFirst();
-			}
-			// Last edge is the source
-			t[path.getFirst()-L][0] = -1;
-			
-			// Make path empty
-			path.clear();
-			
-			return;
+	public int[] BellmanFord(){
+		int[] dist = new int[L+R+2]; //lista das distancias a source
+		for(int i=0; i<L+R+2; i++) {
+			dist[i] = Integer.MAX_VALUE;
 		}
+		
+		dist[source] = 0;
+		Queue<Integer> vertices = new LinkedList<Integer>(); //lista com vertices para a primeira iteracao
+		vertices.add(source);
+		for(int i=0; i<L+R; i++) {
+			vertices.add(i);
+		}
+		for(int i=0; i<L+R+1; i++) {
+			Queue<Integer> changedv = new LinkedList<Integer>(); //lista com vertices cujo dist mudou
+			while(!vertices.isEmpty()) {
+				int e = vertices.poll();
+				//relaxar arestas
+				ArrayList<Integer> l = lovers(e);
+				for(int j=0; j<l.size(); j++) {
+					int u = e;
+					int v = l.get(j);
+					int w = getWeight(u,v);
+					if(dist[u] != Integer.MAX_VALUE && dist[u] + w < dist[v]) {
+						dist[v] = dist[u] + w;
+						if(v != sink) changedv.add(v); //se dist mudou adicionar a changedv
+					}
+				}
+			}
+			if(changedv.isEmpty()) break;
+			vertices = changedv;
+		}
+		return dist;
+	}
+	
+	public boolean invertPathDijkstra(int v, int[] dist, int[] h) {
+		//Mark v as visited
+		visited[v] = true;
+		
+		// Case v == sink
+		if (v == sink) return true;
+		
+		// Case v == source
+		if (v == source) {
+			// Go through the neighbors, reverse the edge if a path was found
+			ArrayList<Integer> l = lovers(v);
+			for (int i = 0; i < l.size(); i++) {
+				int lover = l.get(i);
+				if (!visited[lover]) {
+					if(invertPathDijkstra(lover, dist, h)) {
+						addEdge(lover, v, -getWeight(v,lover));
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		
+		// Case v != source, sink
+		// To save some recursive calls, we'll use the fact vertices in the second set only have one neighbor
+		// Therefore, assume v is in the first set
+		else {
+			ArrayList<Integer> l = lovers(v); // List of neighbors			
+			// Go through neighbors
+			for (int i = 0; i < l.size(); i++) {
+				int lover = l.get(i); // The current neighbor of v we're looking at
+				int w = getWeight(v,lover) + h[v] - h[lover];
+				// If dist[lover] is correct and DFS starting at lover finds a path,
+				// we reverse the edges and return 'true'
+				if (!visited[lover] && dist[lover] == dist[v] + w) {
+					if(invertPathDijkstra(lover, dist, h)) {
+						addEdge(lover, v, -getWeight(v,lover));
+						return true;
+					}
+				}
+			}
+			// If there is no path from any of the neighbors then we return false
+			return false;
+		}
+	}
+
+
+	private int getMinDist(int[] dist, boolean[] seen) {
+		int MinDist = Integer.MAX_VALUE;
+		int MinNode = -1;
+	    for (int i=0; i<seen.length; i++) {
+	    	int d = dist[i];
+	        if (!seen[i] && d < MinDist) {
+	            MinDist = d;
+	            MinNode = i;
+	        }
+	    }
+	    return MinNode;
+	}
+	
+	public int[] Dijkstra(int[] h) {
+		boolean[] seen = new boolean[L+R+2]; //true é visited, false é unvisited
+		int[] dist = new int[L+R+2];
+		//int[] pred = new int[L+R+2];
+		for(int i=0; i<L+R+2; i++) {
+			dist[i] = Integer.MAX_VALUE;
+			//pred[i] = -1;
+		}
+		
+		dist[source] = 0;
+		int current = source;
+		for(int i=0; i<L+R+1; i++) {
+			seen[current] = true;
+			ArrayList<Integer> l = lovers(current);
+			for(int j=0; j<l.size(); j++) {
+				int v = l.get(j);
+				if(!seen[v]) {
+					int w = getWeight(current,v) + h[current] - h[v];
+					if(dist[current] != Integer.MAX_VALUE && dist[current] + w < dist[v]) {
+						dist[v] = dist[current] + w;
+						//pred[lover] = currentnode;
+					}
+				}
+			}
+			int next = getMinDist(dist, seen);
+			if(next == -1 || next == sink) {break;}
+			else {current = next;}
+		}
+		/* Build the path
+		*LinkedList<Integer> path = new LinkedList<Integer>(); // Where we store the path
+		*if(pred[sink] != -1) {
+		*	path.add(sink);
+		*	int e = sink;
+		*	while(e!=source) {
+		*		path.addFirst(pred[e]);
+		*		e=pred[e];
+		*	}
+		}*/
+		return dist;
+	}
+	
+	public int[] DijkstraPQ(int[] h) {
+		boolean[] seen = new boolean[L+R+2]; //true visited, false unvisited
+		int[] dist = new int[L+R+2];
+		PriorityQueue<Vertex> PQ = new PriorityQueue<Vertex>();
+		Vertex vertex;
+		
+		for(int i=0; i<L+R+2; i++) {
+			if(i == L+R) {
+				dist[i] = 0;
+				vertex = new Vertex(i,0);
+				PQ.add(vertex);
+			} else {
+				dist[i] = Integer.MAX_VALUE;
+				vertex = new Vertex(i,Integer.MAX_VALUE);
+				PQ.add(vertex);
+			}
+		}
+		
+		int current;
+		while(!PQ.isEmpty()) {
+			current = PQ.poll().getId();
+			if(dist[current] == Integer.MAX_VALUE) break;
+			seen[current] = true;
+			ArrayList<Integer> l = lovers(current);
+			for(int j=0; j<l.size(); j++) {
+				int v = l.get(j);
+				if(!seen[v]) {
+					int w = getWeight(current,v) + h[current] - h[v];
+					if(dist[current] != Integer.MAX_VALUE && dist[current] + w < dist[v]) {
+						dist[v] = dist[current] + w;
+						vertex = new Vertex(v,dist[v]);
+						PQ.add(vertex);
+					}
+				}
+			}
+		}
+
+		return dist;
+	}
 	
 	
 	// toString method
@@ -290,8 +431,8 @@ public class BipWGSS_Matrix implements BipWGSS {
 				string += "\n";
 				b = false;
 			}
-			if (s[i][1] == 1) string += "--> " + source + " ---[" + s[i][1] + "]---> " + i + "\n";
-			if (s[i][1] == -1) string += "--> " + source + " <---[" + s[i][1] + "]--- " + i + "\n";
+			if (s[i][0] == 1) string += "--> " + source + " ---[" + s[i][1] + "]---> " + i + "\n";
+			if (s[i][0] == -1) string += "--> " + source + " <---[" + s[i][1] + "]--- " + i + "\n";
 		}
 		if (b) string += " None!\n";
 		
