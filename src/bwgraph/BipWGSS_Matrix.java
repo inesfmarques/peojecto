@@ -43,11 +43,11 @@ public class BipWGSS_Matrix implements BipWGSS {
 			for(int j = L; j < L+R; j++) {
 				if (G.edgeQ(i, j)) {
 					E[i][j-L][0] = 1;
-					E[i][j-L][1] = G.getWeight(i, j);
+					E[i][j-L][1] = -G.getWeight(i, j);
 				}
 				else if (G.edgeQ(j, i)) {
 					E[i][j-L][0] = -1;
-					E[i][j-L][1] = G.getWeight(j, i);
+					E[i][j-L][1] = -G.getWeight(j, i);
 				}
 			}
 		}

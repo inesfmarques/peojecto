@@ -41,7 +41,7 @@ public class BipWGSS_List implements BipWGSS {
 			
 			weightsList[i] = new ArrayList<Integer>();
 			J = adjacencyList[i].size();
-			for (int j = 0; j < J; j++) weightsList[i].add( G.getWeight(i, adjacencyList[i].get(j)) );
+			for (int j = 0; j < J; j++) weightsList[i].add( -G.getWeight(i, adjacencyList[i].get(j)) );
 			if (i >= L) {
 				adjacencyList[i].add(sink);
 				weightsList[i].add(0);
