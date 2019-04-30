@@ -46,7 +46,7 @@ public class TimeTest {
 				// --> Sizes of left and right sets
 				L = min + random.nextInt(max - min + 1);
 				R = min + random.nextInt(max - min + 1);
-
+				
 				// --> Setting the graph
 				BipG GM = new BipG_Matrix(L, R);
 				BipG GL = new BipG_List(L, R);
@@ -99,7 +99,7 @@ public class TimeTest {
 				// --> MatroidIntersection() on matrix implementation
 				if (test[4]) {
 					startTime = System.nanoTime();
-					result[4] = GM.MatroidIntersectionBad().size();
+					result[4] = GM.MatroidIntersection().size();
 					finishTime = System.nanoTime();
 					time[i][4] += (finishTime - startTime) / 1000;
 				}
@@ -139,7 +139,7 @@ public class TimeTest {
 				// --> MatroidIntersection() on adjacency lists implementation
 				if (test[9]) {
 					startTime = System.nanoTime();
-					result[9] = GL.MatroidIntersectionBad().size();
+					result[9] = GL.MatroidIntersection().size();
 					finishTime = System.nanoTime();
 					time[i][9] += (finishTime - startTime) / 1000;
 				}
@@ -230,7 +230,7 @@ public class TimeTest {
 			System.out.print("--> EK on matrix: {");
 			commaQ = false;
 			for (int i = 0; i < p.length; i++) {
-				if (commaQ) System.out.print(",");
+				if (commaQ) System.out.print(", ");
 				System.out.print(time[i][0]);
 				commaQ = true;
 			}
@@ -240,7 +240,7 @@ public class TimeTest {
 			System.out.print("--> FF on matrix: {");
 			commaQ = false;
 			for (int i = 0; i < p.length; i++) {
-				if (commaQ) System.out.print(",");
+				if (commaQ) System.out.print(", ");
 				System.out.print(time[i][1]);
 				commaQ = true;
 			}
@@ -250,7 +250,7 @@ public class TimeTest {
 			System.out.print("--> HK on matrix: {");
 			commaQ = false;
 			for (int i = 0; i < p.length; i++) {
-				if (commaQ) System.out.print(",");
+				if (commaQ) System.out.print(", ");
 				System.out.print(time[i][2]);
 				commaQ = true;
 			}
@@ -260,7 +260,7 @@ public class TimeTest {
 			System.out.print("--> MIBad on matrix: {");
 			commaQ = false;
 			for (int i = 0; i < p.length; i++) {
-				if (commaQ) System.out.print(",");
+				if (commaQ) System.out.print(", ");
 				System.out.print(time[i][3]);
 				commaQ = true;
 			}
@@ -270,7 +270,7 @@ public class TimeTest {
 			System.out.print("--> MI on matrix: {");
 			commaQ = false;
 			for (int i = 0; i < p.length; i++) {
-				if (commaQ) System.out.print(",");
+				if (commaQ) System.out.print(", ");
 				System.out.print(time[i][4]);
 				commaQ = true;
 			}
@@ -280,7 +280,7 @@ public class TimeTest {
 			System.out.print("--> EK on lists: {");
 			commaQ = false;
 			for (int i = 0; i < p.length; i++) {
-				if (commaQ) System.out.print(",");
+				if (commaQ) System.out.print(", ");
 				System.out.print(time[i][5]);
 				commaQ = true;
 			}
@@ -290,7 +290,7 @@ public class TimeTest {
 			System.out.print("--> FF on lists: {");
 			commaQ = false;
 			for (int i = 0; i < p.length; i++) {
-				if (commaQ) System.out.print(",");
+				if (commaQ) System.out.print(", ");
 				System.out.print(time[i][6]);
 				commaQ = true;
 			}
@@ -300,7 +300,7 @@ public class TimeTest {
 			System.out.print("--> HK on lists: {");
 			commaQ = false;
 			for (int i = 0; i < p.length; i++) {
-				if (commaQ) System.out.print(",");
+				if (commaQ) System.out.print(", ");
 				System.out.print(time[i][7]);
 				commaQ = true;
 			}
@@ -310,7 +310,7 @@ public class TimeTest {
 			System.out.print("--> MIBad on lists: {");
 			commaQ = false;
 			for (int i = 0; i < p.length; i++) {
-				if (commaQ) System.out.print(",");
+				if (commaQ) System.out.print(", ");
 				System.out.print(time[i][8]);
 				commaQ = true;
 			}
@@ -320,7 +320,7 @@ public class TimeTest {
 			System.out.print("--> MI on lists: {");
 			commaQ = false;
 			for (int i = 0; i < p.length; i++) {
-				if (commaQ) System.out.print(",");
+				if (commaQ) System.out.print(", ");
 				System.out.print(time[i][9]);
 				commaQ = true;
 			}
