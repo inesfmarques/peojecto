@@ -32,7 +32,7 @@ public interface BipGSS {
 	
 	// Returns a list with the descendants of vertex v
 	//
-	// [WARNING] Changing the output of this method may change the matrix!
+	// [WARNING - SHALLOW COPY] Changing the output of this method may change the graph!
 	ArrayList<Integer> lovers(int v);
 	
 	// Finds a path from source to sink through BFS

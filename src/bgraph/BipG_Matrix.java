@@ -4,6 +4,9 @@ package bgraph;
 
 import java.util.ArrayList;
 
+import matroid.Matroid;
+import matroid.MatroidIntersector;
+
 public class BipG_Matrix implements BipG{
 	int L; // Number of vertices on the left set
 	int R; // Number of vertices on the right set
@@ -117,7 +120,8 @@ public class BipG_Matrix implements BipG{
 		}
 		return result;		
 	}
-	
+
+	// Find a maximum bipartite matching using Hopcroft-Karp
 	public ArrayList<int[]> HopcroftKarp() {
 		// Graph with source and sink added
 		BipGSS ResidualGraph = new BipGSS_Matrix(this);
@@ -143,6 +147,26 @@ public class BipG_Matrix implements BipG{
 		}
 		
 		return result;
+	}
+	
+	// Find a maximum bipartite matching using matroid intersection
+	public ArrayList<int[]> MatroidIntersectionBad(){
+		Matroid<int[], ArrayList<int[]>> matroidL = new BipGMatroidBad(this, true);
+		Matroid<int[], ArrayList<int[]>> matroidR = new BipGMatroidBad(this, false);
+		MatroidIntersector<int[], ArrayList<int[]>, ArrayList<int[]>> intersector =
+				new MatroidIntersector<int[], ArrayList<int[]>, ArrayList<int[]>>();
+		
+		return intersector.intersection(matroidL, matroidR);
+	}
+	
+	// Find a maximum bipartite matching using matroid intersection
+	public ArrayList<int[]> MatroidIntersection(){
+		Matroid<int[], BipGMatroidSubset> matroidL = new BipGMatroid(this, true);
+		Matroid<int[], BipGMatroidSubset> matroidR = new BipGMatroid(this, false);
+		MatroidIntersector<int[], BipGMatroidSubset, BipGMatroidSubset> intersector =
+				new MatroidIntersector<int[], BipGMatroidSubset, BipGMatroidSubset>();
+		
+		return intersector.intersection(matroidL, matroidR);
 	}
 	
 	// toString method

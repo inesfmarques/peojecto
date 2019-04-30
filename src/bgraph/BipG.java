@@ -28,7 +28,7 @@ public interface BipG {
 	
 	// Returns a list with the descendants of vertex v
 	//
-	// [WARNING] Changing the output of this method may change the matrix!
+	// [WARNING - SHALLOW COPY] Changing the output of this method may change the graph!
 	ArrayList<Integer> lovers(int v);
 	
 	// Finds a maximum bipartite matching using Edmonds-Karp (that is, Ford-Fulkerson and BFS to improve matchings)
@@ -39,4 +39,10 @@ public interface BipG {
 	
 	// Finds a maximum bipartite matching using Hopcroft-Karp (that is, BFS and DFS to improve matchings)
 	ArrayList<int[]> HopcroftKarp();
+	
+	// Finds a maximum bipartite matching using a matroid intersection algorithm (without improvement)
+	ArrayList<int[]> MatroidIntersectionBad();
+	
+	// Finds a maximum bipartite matching using a matroid intersection algorithm (with improvement)
+	ArrayList<int[]> MatroidIntersection();
 }

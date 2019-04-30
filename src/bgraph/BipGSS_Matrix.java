@@ -128,6 +128,7 @@ public class BipGSS_Matrix implements BipGSS {
 		// Variable used in the loop
 		int e = 0;
 		int head = 0;
+		ArrayList<Integer> l;
 		
 		// Add source to queue
 		queue.add(source);
@@ -136,7 +137,7 @@ public class BipGSS_Matrix implements BipGSS {
 		BFS:
 		while(!queue.isEmpty()) {
 			head = queue.poll();
-			ArrayList<Integer> l = lovers(head); // Get neighbors
+			l = lovers(head); // Get neighbors
 			for(int i = 0; i < l.size(); i++) { // Go through neighbors
 				e = l.get(i);
 				if(visited[e] == -1) { // Check if we've visited this vertex
@@ -175,6 +176,7 @@ public class BipGSS_Matrix implements BipGSS {
 		// Variables used in the loop
 		int e = 0;
 		int head = 0;
+		ArrayList<Integer> l;
 		
 		// Add source to stack
 		stack.push(source);
@@ -183,8 +185,8 @@ public class BipGSS_Matrix implements BipGSS {
 		DFS:
 		while(!stack.empty()) {
 			head = stack.pop();
-			ArrayList<Integer> l = lovers(head); // Get neighbors
-			for(int i = l.size() - 1; i > -1; i--) { // Go through neighbors
+			l = lovers(head); // Get neighbors
+			for (int i = l.size() - 1; i > -1; i--) { // Go through neighbors
 				e = l.get(i);
 				if(visited[e] == -1) { // Check if we've visited this vertex
 					stack.push(e);
