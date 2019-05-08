@@ -8,6 +8,7 @@
 package painting;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import matroid.Matroid;
 import graph.Graph;
@@ -76,7 +77,7 @@ public class GraphicColorMatroid implements Matroid<int[], GraphicColorMatroidSu
 	}
 	
 	// Converts an ArrayList into a Subset, to be used with the remaining methods
-	public GraphicColorMatroidSubset arrayToSubset(ArrayList<int[]> set){
+	public GraphicColorMatroidSubset arrayToSubset(ArrayList<int[]> set){		
 		return new GraphicColorMatroidSubset(G.getSize(), set, color);
 	}
 
@@ -89,10 +90,10 @@ public class GraphicColorMatroid implements Matroid<int[], GraphicColorMatroidSu
 	}
 
 	// Input:
-	// --> set: ArrayList of elements of the ground set
-	// --> x: element not in set
+	// --> set: Subset of elements that is in the matroid
+	// --> x: element not in set such that (set U {x}) is not in the matroid
 	// --> y: element in set
-	// Output: 'true' if (set U {x}) \ {y} is in the matorid, 'false' otherwise
+	// Output: 'true' if (set U {x} \ {y}) is in the matorid, 'false' otherwise
 	public boolean belongsTo(GraphicColorMatroidSubset set, int[] x, int[] y) {
 		return set.addQ(x, y); 
 	}

@@ -67,7 +67,7 @@ public class Painter {
 		for (int i = 0; i < G.getSize(); i++) color += G.lovers(i).size();
 		color /= 2;
 		// --> Compute the ceiling of |E|/(|V|-1)
-		color = (color + (G.getSize()-1)) / (G.getSize()-1);
+		color = 1 + (color - 1) / (G.getSize() - 1);
 		
 		// Test all possibilities
 		// We know it's possible to do it with |V|-1 colors

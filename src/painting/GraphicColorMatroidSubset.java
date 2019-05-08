@@ -32,7 +32,7 @@ public class GraphicColorMatroidSubset {
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < c; j++) disjointSet[i][j] = -1;
 		}
-		for (int i = 0; i < edgeSet.size(); i++) setParent(edgeSet.get(i)[0], edgeSet.get(i)[1], edgeSet.get(i)[2]);
+		for (int i = 0; i < edgeSet.size(); i++) setParent(edgeSet.get(i)[0], edgeSet.get(i)[2], edgeSet.get(i)[1]);
 		
 		subsetsWithoutElement = new GraphicColorMatroidSubset[n][n][c];
 	}
@@ -58,6 +58,7 @@ public class GraphicColorMatroidSubset {
 	}
 	
 	// Returns 'true' if adding edge 'e' and removing edge 'f' doesn't close a cycle, 'false' otherwise
+	// We know adding edge 'e' creates conflicts
 	protected boolean addQ(int[] e, int[] f) {
 		// Check if we have the subset without f
 		if (subsetsWithoutElement[f[0]][f[1]][f[2]] == null) {

@@ -30,11 +30,9 @@ public class ColorMatroidSubset {
 	}
 	
 	// Returns 'true' if adding edge 'e' and removing edge 'f' doesn't create conflicts in the terminations, 'false' otherwise
+	// We know adding edge 'e' creates conflicts
 	protected boolean addQ(int[] e, int[] f) {
-		// If e and f have the same endpoints, then return 'true'
-		if (e[0] == f[0] && e[1] == f[1]) return true;
-		// Otherwise, check if there is an edge with the same endpoints
-		else return !history[e[0]][e[1]];
+		return (e[0] == f[0] && e[1] == f[1]);
 	}
 
 }

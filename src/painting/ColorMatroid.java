@@ -8,6 +8,7 @@
 package painting;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import graph.Graph;
 import matroid.Matroid;
@@ -68,9 +69,9 @@ public class ColorMatroid implements Matroid<int[], ColorMatroidSubset> {
 
 	// Input:
 	// --> set: Subset of elements that is in the matroid
-	// --> x: element not in set
+	// --> x: element not in set such that (set U {x}) is not in the matroid
 	// --> y: element in set
-	// Output: 'true' if (set U {x}) \ {y} is in the matorid, 'false' otherwise
+	// Output: 'true' if (set U {x} \ {y}) is in the matorid, 'false' otherwise
 	public boolean belongsTo(ColorMatroidSubset set, int[] x, int[] y) {
 		return set.addQ(x, y);
 	}
