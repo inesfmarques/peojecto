@@ -15,7 +15,7 @@ public class BipWG_List implements BipWG {
 	// Array of the weights of edges
 	// The i-th position corresponds to the weights of the edges leaving i
 	// The edge is the same as the corresponding in adjacencyList
-	ArrayList<Integer>[] weightsList;
+	ArrayList<Double>[] weightsList;
 	
 	// Constructor
 	public BipWG_List(int n, int m) {
@@ -23,10 +23,11 @@ public class BipWG_List implements BipWG {
 		R = m;
 		
 		adjacencyList = new ArrayList[L+R];
-		for (int i = 0; i < L+R; i++) adjacencyList[i] = new ArrayList<Integer>();
-		
 		weightsList = new ArrayList[L+R];
-		for (int i = 0; i < L+R; i++) weightsList[i] = new ArrayList<Integer>();
+		for (int i = 0; i < L+R; i++) {
+			adjacencyList[i] = new ArrayList<Integer>();
+			weightsList[i] = new ArrayList<Double>();
+		}
 	}
 
 	// Return size of left set
@@ -40,7 +41,7 @@ public class BipWG_List implements BipWG {
 	}
 	
 	// Return weight of edge from l to r
-	public int getWeight(int l, int r) {
+	public double getWeight(int l, int r) {
 		// Try to find edge from l to r
 		int i = 0;
 		ArrayList<Integer> list = adjacencyList[l];
@@ -52,7 +53,7 @@ public class BipWG_List implements BipWG {
 	}
 
 	// Adds directed edge from vertex l to vertex r with weight w
-	public void addEdge(int l, int r, int w) {
+	public void addEdge(int l, int r, double w) {
 		// Try to find edge from l to r
 		int i = 0;
 		ArrayList<Integer> list = adjacencyList[l];
@@ -98,10 +99,10 @@ public class BipWG_List implements BipWG {
 		BipWGSS ResidualGraph = new BipWGSS_List(this);
 		
 		// BF: get distances to source
-		int[] dist = ResidualGraph.BellmanFord();
+		double[] dist = ResidualGraph.BellmanFord();
 		
 		// Repeat DFS + BF until we can't reach the sink
-		while(dist[ResidualGraph.getSink()] != Integer.MAX_VALUE) {
+		while(dist[ResidualGraph.getSink()] != Double.MAX_VALUE) {
 			while(ResidualGraph.invertPathBF(ResidualGraph.getSource(), dist)) {
 				ResidualGraph.setVisited();
 			}
@@ -129,16 +130,16 @@ public class BipWG_List implements BipWG {
 		BipWGSS ResidualGraph = new BipWGSS_List(this);
 		
 		// BF: get distances to source
-		int[] h = ResidualGraph.BellmanFord();
+		double[] h = ResidualGraph.BellmanFord();
 		while(ResidualGraph.invertPathBF(ResidualGraph.getSource(), h)) {
 			ResidualGraph.setVisited();
 		}
 		ResidualGraph.setVisited();
 		
 		//Apply Dijkstra with changed weights
-		int[] dist = ResidualGraph.Dijkstra(h);
+		double[] dist = ResidualGraph.Dijkstra(h);
 		// Repeat DFS + Dijkstra until we can't reach the sink
-		while(dist[ResidualGraph.getSink()] != Integer.MAX_VALUE) {
+		while(dist[ResidualGraph.getSink()] != Double.MAX_VALUE) {
 			while(ResidualGraph.invertPathDijkstra(ResidualGraph.getSource(), dist, h)) {
 				ResidualGraph.setVisited();
 			}
@@ -166,16 +167,16 @@ public class BipWG_List implements BipWG {
 		BipWGSS ResidualGraph = new BipWGSS_Matrix(this);
 		
 		// BF: get distances to source
-		int[] h = ResidualGraph.BellmanFord();
+		double[] h = ResidualGraph.BellmanFord();
 		while(ResidualGraph.invertPathBF(ResidualGraph.getSource(), h)) {
 			ResidualGraph.setVisited();
 		}
 		ResidualGraph.setVisited();
 		
 		//Apply Dijkstra with changed weights
-		int[] dist = ResidualGraph.DijkstraPQ(h);
+		double[] dist = ResidualGraph.DijkstraPQ(h);
 		// Repeat DFS + Dijkstra until we can't reach the sink
-		while(dist[ResidualGraph.getSink()] != Integer.MAX_VALUE) {
+		while(dist[ResidualGraph.getSink()] != Double.MAX_VALUE) {
 			while(ResidualGraph.invertPathDijkstra(ResidualGraph.getSource(), dist, h)) {
 				ResidualGraph.setVisited();
 			}

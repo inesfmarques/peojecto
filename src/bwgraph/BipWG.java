@@ -17,12 +17,12 @@ public interface BipWG {
 	
 	// Returns weight of edge from i to j
 	// Returns 0 if no such edge exists
-	int getWeight(int l, int r);
+	double getWeight(int l, int r);
 	
 	// Adds directed edge from vertex l to vertex r with weight w
 	// Overrides if there is already an edge
 	// Does nothing if l and r are in the same set
-	void addEdge(int l, int r, int w);
+	void addEdge(int l, int r, double w);
 	
 	// Returns True if there is an edge from l to r, False otherwise
 	boolean edgeQ(int l, int r);

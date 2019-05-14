@@ -4,10 +4,10 @@ package bwgraph;
 
 class Vertex implements Comparable<Vertex>{
 	int id;
-	int dist;
+	double dist;
 	
 	// Constructor from Vertex
-	public Vertex(int i, int d) {
+	public Vertex(int i, double d) {
 		id = i;
 		dist = d;
 	}
@@ -16,12 +16,12 @@ class Vertex implements Comparable<Vertex>{
 		return id;
 	}
 
-	public int getDist() {
+	public double getDist() {
 		return dist;
 	}
 	
 	public int compareTo(Vertex v) {
-		int r = Integer.compare(dist, v.dist);
+		int r = Double.compare(dist, v.dist);
 		if (r == 0) {return Integer.compare(id, v.id);}
 		else return r;
 	}

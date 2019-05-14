@@ -21,7 +21,7 @@ public class BipWGSS_List implements BipWGSS {
 	// Array of the weights of edges
 	// The i-th position corresponds to the weights of the edges leaving i
 	// The edge is the same as the corresponding in adjacencyList
-	ArrayList<Integer>[] weightsList;
+	ArrayList<Double>[] weightsList;
 
 	// Constructor from BipWG (deep copy)
 	public BipWGSS_List(BipWG G) {
@@ -39,26 +39,26 @@ public class BipWGSS_List implements BipWGSS {
 		for (int i = 0; i < L+R; i++) {
 			adjacencyList[i] = new ArrayList<Integer>(G.lovers(i));
 			
-			weightsList[i] = new ArrayList<Integer>();
+			weightsList[i] = new ArrayList<Double>();
 			J = adjacencyList[i].size();
 			for (int j = 0; j < J; j++) weightsList[i].add( -G.getWeight(i, adjacencyList[i].get(j)) );
 			if (i >= L) {
 				adjacencyList[i].add(sink);
-				weightsList[i].add(0);
+				weightsList[i].add(0.);
 			}
 		}
 		
 		// Source
 		adjacencyList[L+R] = new ArrayList<Integer>();
-		weightsList[L+R] = new ArrayList<Integer>();
+		weightsList[L+R] = new ArrayList<Double>();
 		for (int i = 0; i < L; i++) {
 			adjacencyList[L+R].add(i);
-			weightsList[L+R].add(0);
+			weightsList[L+R].add(0.);
 		}
 		
 		// Sink
 		adjacencyList[L+R+1] = new ArrayList<Integer>();
-		weightsList[L+R+1] = new ArrayList<Integer>();		
+		weightsList[L+R+1] = new ArrayList<Double>();		
 	}
 	
 	public int getL() {
@@ -83,7 +83,7 @@ public class BipWGSS_List implements BipWGSS {
 	}
 
 	// Return weight of edge from l to r
-	public int getWeight(int l, int r) {
+	public double getWeight(int l, int r) {
 		// Try to find edge from l to r
 		int i = 0;
 		ArrayList<Integer> list = adjacencyList[l];
@@ -95,7 +95,7 @@ public class BipWGSS_List implements BipWGSS {
 	}
 
 	// Adds directed edge from vertex l to vertex r with weight w
-	public void addEdge(int l, int r, int w) {
+	public void addEdge(int l, int r, double w) {
 		// Try to find edge from l to r
 		int i = 0;
 		ArrayList<Integer> list = adjacencyList[l];
@@ -134,7 +134,7 @@ public class BipWGSS_List implements BipWGSS {
 		return adjacencyList[v];
 	}
 	
-	public boolean invertPathBF(int v, int[] dist) {
+	public boolean invertPathBF(int v, double[] dist) {
 		//Mark v as visited
 		visited[v] = true;
 		
@@ -165,7 +165,7 @@ public class BipWGSS_List implements BipWGSS {
 			// Go through neighbors
 			for (int i = 0; i < l.size(); i++) {
 				int lover = l.get(i); // The current neighbor of v we're looking at
-				int w = getWeight(v,lover);
+				double w = getWeight(v,lover);
 				// If dist[lover] is correct and DFS starting at lover finds a path,
 				// we reverse the edges and return 'true'
 				if (!visited[lover] && dist[lover] == dist[v] + w) {
@@ -180,10 +180,10 @@ public class BipWGSS_List implements BipWGSS {
 		}
 	}
 	
-	public int[] BellmanFord(){
-		int[] dist = new int[L+R+2]; //lista das distancias a source
+	public double[] BellmanFord(){
+		double[] dist = new double[L+R+2]; //lista das distancias a source
 		for(int i=0; i<L+R+2; i++) {
-			dist[i] = Integer.MAX_VALUE;
+			dist[i] = Double.MAX_VALUE;
 		}
 		
 		dist[source] = 0;
@@ -201,8 +201,8 @@ public class BipWGSS_List implements BipWGSS {
 				for(int j=0; j<l.size(); j++) {
 					int u = e;
 					int v = l.get(j);
-					int w = getWeight(u,v);
-					if(dist[u] != Integer.MAX_VALUE && dist[u] + w < dist[v]) {
+					double w = getWeight(u,v);
+					if(dist[u] != Double.MAX_VALUE && dist[u] + w < dist[v]) {
 						dist[v] = dist[u] + w;
 						if(v != sink) changedv.add(v); //se dist mudou adicionar a changedv
 					}
@@ -214,7 +214,7 @@ public class BipWGSS_List implements BipWGSS {
 		return dist;
 	}
 	
-	public boolean invertPathDijkstra(int v, int[] dist, int[] h) {
+	public boolean invertPathDijkstra(int v, double[] dist, double[] h) {
 		//Mark v as visited
 		visited[v] = true;
 		
@@ -245,7 +245,7 @@ public class BipWGSS_List implements BipWGSS {
 			// Go through neighbors
 			for (int i = 0; i < l.size(); i++) {
 				int lover = l.get(i); // The current neighbor of v we're looking at
-				int w = getWeight(v,lover) + h[v] - h[lover];
+				double w = getWeight(v,lover) + h[v] - h[lover];
 				// If dist[lover] is correct and DFS starting at lover finds a path,
 				// we reverse the edges and return 'true'
 				if (!visited[lover] && dist[lover] == dist[v] + w) {
@@ -261,11 +261,11 @@ public class BipWGSS_List implements BipWGSS {
 	}
 
 
-	private int getMinDist(int[] dist, boolean[] seen) {
-		int MinDist = Integer.MAX_VALUE;
+	private int getMinDist(double[] dist, boolean[] seen) {
+		double MinDist = Double.MAX_VALUE;
 		int MinNode = -1;
 	    for (int i=0; i<seen.length; i++) {
-	    	int d = dist[i];
+	    	double d = dist[i];
 	        if (!seen[i] && d < MinDist) {
 	            MinDist = d;
 	            MinNode = i;
@@ -274,12 +274,12 @@ public class BipWGSS_List implements BipWGSS {
 	    return MinNode;
 	}
 	
-	public int[] Dijkstra(int[] h) {
+	public double[] Dijkstra(double[] h) {
 		boolean[] seen = new boolean[L+R+2]; //true é visited, false é unvisited
-		int[] dist = new int[L+R+2];
+		double[] dist = new double[L+R+2];
 		//int[] pred = new int[L+R+2];
 		for(int i=0; i<L+R+2; i++) {
-			dist[i] = Integer.MAX_VALUE;
+			dist[i] = Double.MAX_VALUE;
 			//pred[i] = -1;
 		}
 		
@@ -291,15 +291,15 @@ public class BipWGSS_List implements BipWGSS {
 			for(int j=0; j<l.size(); j++) {
 				int v = l.get(j);
 				if(!seen[v]) {
-					int w = getWeight(current,v) + h[current] - h[v];
-					if(dist[current] != Integer.MAX_VALUE && dist[current] + w < dist[v]) {
+					double w = getWeight(current,v) + h[current] - h[v];
+					if(dist[current] != Double.MAX_VALUE && dist[current] + w < dist[v]) {
 						dist[v] = dist[current] + w;
 						//pred[lover] = currentnode;
 					}
 				}
 			}
 			int next = getMinDist(dist, seen);
-			if(next == -1 || next == sink) {break;}
+			if(next == -1) {break;}
 			else {current = next;}
 		}
 		/* Build the path
@@ -315,9 +315,9 @@ public class BipWGSS_List implements BipWGSS {
 		return dist;
 	}
 	
-	public int[] DijkstraPQ(int[] h) {
+	public double[] DijkstraPQ(double[] h) {
 		boolean[] seen = new boolean[L+R+2]; //true visited, false unvisited
-		int[] dist = new int[L+R+2];
+		double[] dist = new double[L+R+2];
 		PriorityQueue<Vertex> PQ = new PriorityQueue<Vertex>();
 		Vertex vertex;
 		
@@ -327,8 +327,8 @@ public class BipWGSS_List implements BipWGSS {
 				vertex = new Vertex(i,0);
 				PQ.add(vertex);
 			} else {
-				dist[i] = Integer.MAX_VALUE;
-				vertex = new Vertex(i,Integer.MAX_VALUE);
+				dist[i] = Double.MAX_VALUE;
+				vertex = new Vertex(i,Double.MAX_VALUE);
 				PQ.add(vertex);
 			}
 		}
@@ -336,14 +336,14 @@ public class BipWGSS_List implements BipWGSS {
 		int current;
 		while(!PQ.isEmpty()) {
 			current = PQ.poll().getId();
-			if(dist[current] == Integer.MAX_VALUE) break;
+			if(dist[current] == Double.MAX_VALUE) break;
 			seen[current] = true;
 			ArrayList<Integer> l = lovers(current);
 			for(int j=0; j<l.size(); j++) {
 				int v = l.get(j);
 				if(!seen[v]) {
-					int w = getWeight(current,v) + h[current] - h[v];
-					if(dist[current] != Integer.MAX_VALUE && dist[current] + w < dist[v]) {
+					double w = getWeight(current,v) + h[current] - h[v];
+					if(dist[current] != Double.MAX_VALUE && dist[current] + w < dist[v]) {
 						dist[v] = dist[current] + w;
 						vertex = new Vertex(v,dist[v]);
 						PQ.add(vertex);
