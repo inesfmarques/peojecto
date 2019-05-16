@@ -12,10 +12,11 @@ public class TimeTest {
 		// --> p: array with edge densities
 		// --> seed: for random
 		int N = 10;
-		int min = 200;
-		int max = 400;
-		double[] p = new double[] {0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 0.9, 0.95};
+		int min = 1000;
+		int max = 1000;
+		double[] p = {0.001, 0.0500, 0.1000, 0.1500, 0.2000, 0.2500, 0.3000, 0.3500, 0.4000, 0.4500, 0.5000, 0.550, 0.6000, 0.6500, 0.7000, 0.7500, 0.8000, 0.8500, 0.9000, 0.950};
 		long seed = 1;
+		boolean[] test = new boolean[] {true, true, true, true, true, true, true, true, true, true};
 		
 		// Set seed
 		Random random = new Random();
@@ -62,37 +63,37 @@ public class TimeTest {
 				startTime = System.nanoTime();
 				result[0] = GM.MatchingBellmanFord().size();
 				finishTime = System.nanoTime();
-				time[i][0] += (finishTime - startTime) / 1000000;
+				time[i][0] += (finishTime - startTime) / 1000;
 				
 				// --> MatchingDijkstra() on matrix implementation
 				startTime = System.nanoTime();
 				result[1] = GM.MatchingDijkstra().size();
 				finishTime = System.nanoTime();
-				time[i][1] += (finishTime - startTime) / 1000000;
+				time[i][1] += (finishTime - startTime) / 1000;
 
 				// --> MatchingDijkstraPQ() on matrix implementation
 				startTime = System.nanoTime();
 				result[2] = GM.MatchingDijkstraPQ().size();
 				finishTime = System.nanoTime();
-				time[i][2] += (finishTime - startTime) / 1000000;
+				time[i][2] += (finishTime - startTime) / 1000;
 
 				// --> MatchingBellmanFord() on adjacency lists implementation
 				startTime = System.nanoTime();
 				result[3] = GL.MatchingBellmanFord().size();
 				finishTime = System.nanoTime();
-				time[i][3] += (finishTime - startTime) / 1000000;
+				time[i][3] += (finishTime - startTime) / 1000;
 
 				// --> MatchingDijkstra() on adjacency lists implementation
 				startTime = System.nanoTime();
 				result[4] = GL.MatchingDijkstra().size();
 				finishTime = System.nanoTime();
-				time[i][4] += (finishTime - startTime) / 1000000;
+				time[i][4] += (finishTime - startTime) / 1000;
 				
 				// --> MatchingDijkstraPQ() on adjacency lists implementation
 				startTime = System.nanoTime();
 				result[5] = GL.MatchingDijkstraPQ().size();
 				finishTime = System.nanoTime();
-				time[i][5] += (finishTime - startTime) / 1000000;
+				time[i][5] += (finishTime - startTime) / 1000;
 				
 				// Check if results are the same
 				if(!(result[0] == result[1] &&
@@ -136,9 +137,74 @@ public class TimeTest {
 			System.out.println("    " + time[i][5] + " milliseconds for MatchingDijkstraPQ() on adjacency lists implementation");
 		}
 		System.out.println();
-		System.out.println("PROCESS TERMINATED");
-		return;
 		
+		boolean commaQ;
+		System.out.println("Print para a Mariana:");
+		
+		if (test[0]) {
+			System.out.print("--> BF on matrix: {");
+			commaQ = false;
+			for (int i = 0; i < p.length; i++) {
+				if (commaQ) System.out.print(", ");
+				System.out.print(time[i][0]);
+				commaQ = true;
+			}
+			System.out.println("}");
+		}
+		if (test[1]) {
+			System.out.print("--> Dijkstra on matrix: {");
+			commaQ = false;
+			for (int i = 0; i < p.length; i++) {
+				if (commaQ) System.out.print(", ");
+				System.out.print(time[i][1]);
+				commaQ = true;
+			}
+			System.out.println("}");
+		}
+		if (test[2]) {
+			System.out.print("--> DijkstraPQ on matrix: {");
+			commaQ = false;
+			for (int i = 0; i < p.length; i++) {
+				if (commaQ) System.out.print(", ");
+				System.out.print(time[i][2]);
+				commaQ = true;
+			}
+			System.out.println("}");
+		}
+		if (test[3]) {
+			System.out.print("--> BF on lists: {");
+			commaQ = false;
+			for (int i = 0; i < p.length; i++) {
+				if (commaQ) System.out.print(", ");
+				System.out.print(time[i][3]);
+				commaQ = true;
+			}
+			System.out.println("}");
+		}
+		if (test[4]) {
+			System.out.print("--> Dijkstra on lists: {");
+			commaQ = false;
+			for (int i = 0; i < p.length; i++) {
+				if (commaQ) System.out.print(", ");
+				System.out.print(time[i][4]);
+				commaQ = true;
+			}
+			System.out.println("}");
+		}
+		if (test[5]) {
+			System.out.print("--> DijkstraPQ on lists: {");
+			commaQ = false;
+			for (int i = 0; i < p.length; i++) {
+				if (commaQ) System.out.print(", ");
+				System.out.print(time[i][5]);
+				commaQ = true;
+			}
+			System.out.println("}");
+		}
+		System.out.println();
+		
+		System.out.println("PROCESS TERMINATED");
+		return;	
 	}
 
 }
