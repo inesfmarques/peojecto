@@ -1,4 +1,4 @@
-/* Example of usage of TimeTest to perform time measurements */
+/* Usage of TimeTest to obtain time performances of matroid intersection methods for fixed number of vertices (Figure 4a in the report) */
 
 package timetest;
 
@@ -8,31 +8,30 @@ import bgraph.BipG;
 import bgraph.BipG_List;
 import bgraph.BipG_Matrix;
 
-public class TimeTest_UW_Matroid_FixV {
+public class TimeTest_UW_Matroid_FixE {
 	
 	public static void main(String[] args) {
 		//TODO Set variables
 		// --> N: number of graphs for each probability
-		// --> min: minimum number of vertices in each set
-		// --> max: maximum number of vertices in each set
+		// --> a: Number of edges
 		// --> edgeDensity: array with edge densities
 		// --> seed: for random
 		// --> test: set i-th entry to true if you want to use the i-th method, false otherwise
 		int N = 10;
-		int min = 200;
-		int max = 200;
-		double[] p = new double[] {0.001, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95};
+		int a = 2000;
+		int[] v = new int[] {50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200};
 		long seed = 1;
-		//figure 4
+		figure 4
 		boolean[] test = new boolean[] {false, false, false, true, true,
 										false, false, false, true, true};
+
 		
 		// Set seed
 		Random random = new Random();
 		random.setSeed(seed);
 		
 		// List with times
-		double[][] time = new double[p.length][10];
+		double[][] time = new double[v.length][10];
 		
 		// Variables used
 		boolean check;
@@ -41,10 +40,11 @@ public class TimeTest_UW_Matroid_FixV {
 		long startTime, finishTime;
 		double resultTotal;
 		
+
 		// Do the tests
 		System.out.println("Starting tests:");
-		for (int i = 0; i < p.length; i++) {
-			System.out.println("--> Performing tests for p = " + p[i] + "...");
+		for (int i = 0; i < v.length; i++) {
+			System.out.println("--> Performing tests for v = " + v[i] + "...");
 			
 			resultTotal = 0;
 			
@@ -52,22 +52,28 @@ public class TimeTest_UW_Matroid_FixV {
 				
 				// Build the graph randomly
 				// --> Sizes of left and right sets
-				L = min + random.nextInt(max - min + 1);
-				R = min + random.nextInt(max - min + 1);
+				L = v[i];
+				R = v[i];
 				
 				// --> Setting the graph
 				BipG GM = new BipG_Matrix(L, R);
 				BipG GL = new BipG_List(L, R);
 				
+				int l,r;
+				
 				// --> Adding edges randomly
-				for (int l = 0; l < L; l++) {
-					for (int r = L; r < L+R; r++) {
-						if (random.nextDouble() < p[i]) {
-							GM.addEdge(l, r);
-							GL.addEdge(l, r);
-						}
+				for (int j = 0; j < a; j++) {
+					l = random.nextInt(v[i]);
+					r = random.nextInt(v[i]) + L;
+					while(GM.edgeQ(l, r)) {
+						l = random.nextInt(v[i]);
+						r = random.nextInt(v[i]) + L;
 					}
+					GM.addEdge(l, r);
+					GL.addEdge(l, r);
 				}
+				
+				
 				
 				// Do the tests
 				// result is where we store the size of matching found by each method
@@ -141,7 +147,7 @@ public class TimeTest_UW_Matroid_FixV {
 					startTime = System.nanoTime();
 					result[8] = GL.MatroidIntersectionBad().size();
 					finishTime = System.nanoTime();
-					time[i][8] += (finishTime - startTime) / 1000;
+					time[i][8] += (finishTime - startTime) / 1000000;
 				}
 				
 				// --> MatroidIntersection() on adjacency lists implementation
@@ -149,14 +155,14 @@ public class TimeTest_UW_Matroid_FixV {
 					startTime = System.nanoTime();
 					result[9] = GL.MatroidIntersection().size();
 					finishTime = System.nanoTime();
-					time[i][9] += (finishTime - startTime) / 1000;
+					time[i][9] += (finishTime - startTime) / 1000000;
 				}
 				
 				// Check if results are the same
 				check = true;
-				for (int a = 0; a < 10; a++) {
-					for (int b = a+1; b < 10; b++) {
-						if (test[a] && test[b] && result[a] != result[b]) check = false;
+				for (int aa = 0; aa < 10; aa++) {
+					for (int b = aa+1; b < 10; b++) {
+						if (test[aa] && test[b] && result[aa] != result[b]) check = false;
 					}
 				}
 				
@@ -183,9 +189,10 @@ public class TimeTest_UW_Matroid_FixV {
 					return;
 				}
 				
-				for (int a = 0; a < 10; a++) {
-					if (test[a]) {
-						resultTotal += result[a];
+				
+				for (int aa = 0; aa < 10; aa++) {
+					if (test[aa]) {
+						resultTotal += result[aa];
 						break;
 					}
 				}
@@ -199,7 +206,7 @@ public class TimeTest_UW_Matroid_FixV {
 			
 			System.out.println("    Maximum matchings had on average size " + resultTotal);
 			// Print results found for this case
-			System.out.println("    --> For p = " + p[i] + " the average times were");
+			System.out.println("    --> For v = " + v[i] + " the average times were");
 			if (test[0]) System.out.println("        " + time[i][0] + " microseconds for EdmondsKarp() on matrix implementation");
 			if (test[1]) System.out.println("        " + time[i][1] + " microseconds for FordFulkerson() on matrix implementation");
 			if (test[2]) System.out.println("        " + time[i][2] + " microseconds for HopcroftKarp() on matrix implementation");
@@ -216,8 +223,8 @@ public class TimeTest_UW_Matroid_FixV {
 		
 		// All tests are done, print all results found
 		System.out.println("Tests done!");
-		for (int i = 0; i < p.length; i++) {
-			System.out.println("--> For p = " + p[i] + " the average times were");
+		for (int i = 0; i < v.length; i++) {
+			System.out.println("--> For v = " + v[i] + " the average times were");
 			if (test[0]) System.out.println("    " + time[i][0] + " microseconds for EdmondsKarp() on matrix implementation");
 			if (test[1]) System.out.println("    " + time[i][1] + " microseconds for FordFulkerson() on matrix implementation");
 			if (test[2]) System.out.println("    " + time[i][2] + " microseconds for HopcroftKarp() on matrix implementation");
