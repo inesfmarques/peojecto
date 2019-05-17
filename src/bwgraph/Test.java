@@ -1,4 +1,5 @@
 /* Example of usage of BipWG and matching methods */
+/* See 'BipWG' interface for a full list of available methods */
 
 package bwgraph;
 
