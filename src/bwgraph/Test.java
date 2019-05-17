@@ -35,9 +35,9 @@ public class Test {
 		/* Create graph */
 		BipWG H = new BipWG_Matrix(3, 3);
 		/* Add edges to graph */
-		H.addEdge(0, new int[] {3,4}, new double[] {15,13});
-		H.addEdge(1, new int[] {3,5}, new double[] {6,4});
-		H.addEdge(2, new int[] {4,5}, new double[] {14,10});
+		H.addEdge(0, new int[] {3,4}, new double[] {-15,-13});
+		H.addEdge(1, new int[] {3,5}, new double[] {-6,-4});
+		H.addEdge(2, new int[] {4,5}, new double[] {-14,-10});
 		/* Print graph */
 		System.out.println("Graph 2:");
 		System.out.print(H);
