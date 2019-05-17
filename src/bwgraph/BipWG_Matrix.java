@@ -57,6 +57,13 @@ public class BipWG_Matrix implements BipWG{
 		return;
 	}
 	
+	public void addEdge(int l, int[] rArray, double[] wArray) {
+		if(rArray.length == wArray.length) {
+			for (int i = 0; i < rArray.length; i++) this.addEdge(l, rArray[i], wArray[i]);
+		}
+		return;
+	}
+	
 	// Returns True if there is an edge from l to r, False otherwise
 	public boolean edgeQ(int l, int r) {
 		if (l < L && r >= L && r < L+R) return E[l][r-L][0] == 1;

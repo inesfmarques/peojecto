@@ -82,6 +82,13 @@ public class BipWG_List implements BipWG {
 		
 		return;
 	}
+	
+	public void addEdge(int l, int[] rArray, double[] wArray) {
+		if(rArray.length == wArray.length) {
+			for (int i = 0; i < rArray.length; i++) this.addEdge(l, rArray[i], wArray[i]);
+		}
+		return;
+	}
 
 	// Returns 'true' if there is an edge from l to r, 'false' otherwise
 	public boolean edgeQ(int l, int r) {
