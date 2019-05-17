@@ -19,12 +19,20 @@ public class TimeTest_UW_Example {
 		// --> seed: for random
 		// --> test: set i-th entry to true if you want to use the i-th method, false otherwise
 		int N = 20;
-		int min = 200;
-		int max = 200;
+		int min = 2000;
+		int max = 2000;
 		double[] p = new double[] {0.001, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95};
 		long seed = 1;
-		boolean[] test = new boolean[] {false, false, false, true, true,
-										false, false, false, true, true};
+		//--> test: points the algorithms under test: EdmondsKarp m, FordFulkerson m, HopcroftKarp m, MatroidIntersectionBad m,  MatroidIntersection m, 
+		//				       						  EdmondsKarp l, FordFulkerson l, HopcroftKarp l, MatroidIntersectionBad l,  MatroidIntersection l,
+		//With this boolean we obtain the results that compute Figure 2 
+		boolean[] test = new boolean[] {true, true, true, false, false,
+										true, true, true, false, false};
+		
+		//With this boolean we obtain the results that compute Figure 4 
+		//boolean[] test = new boolean[] {false, false, false, true, true,
+		//								false, false, false, true, true};
+		
 		
 		// Set seed
 		Random random = new Random();
