@@ -16,5 +16,4 @@ Package descriptions:
     Class 'Test' showcases main methods
     Requires 'graph' and 'matroid' packages
  - 'timetest': Stores the classes used to measure the time performances of maximum matching methods
-    Classes 'TimeTest_UW_Example' and 'TimeTest_W_Example' showcase how to use them (for unweighted and weighted graphs, respectively)
-    Requires 'bgraph', 'bgraph' and 'matroid' packages
+    Requires 'bgraph', 'bwgraph' and 'matroid' packages
