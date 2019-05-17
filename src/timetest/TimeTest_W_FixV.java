@@ -1,3 +1,6 @@
+/* Usage of TimeTest to obtain time performances of maximum weighted bipartite matchings for fixed number of vertices */
+/* Generates Figure 3a of the report */
+
 package timetest;
 
 import java.util.Random;
@@ -13,7 +16,7 @@ public class TimeTest_W_FixV {
 				// --> N: number of graphs for each probability
 				// --> min: minimum number of vertices in each set
 				// --> max: maximum number of vertices in each set
-				// --> edgeDensity: array with edge densities
+				// --> p: array with edge densities
 				// --> seed: for random
 				// --> test: set i-th entry to true if you want to use the i-th method, false otherwise
 		int N = 10;

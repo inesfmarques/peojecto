@@ -1,4 +1,5 @@
-/* Usage of TimeTest to obtain time performances of matroid intersection methods for fixed number of vertices (Figure 4a in the report) */
+/* Usage of TimeTest to obtain time performances of matroid intersection methods for fixed number of edges */
+/* Generates Figure 4b of the report */
 
 package timetest;
 
@@ -13,15 +14,14 @@ public class TimeTest_UW_Matroid_FixE {
 	public static void main(String[] args) {
 		//TODO Set variables
 		// --> N: number of graphs for each probability
-		// --> a: Number of edges
-		// --> edgeDensity: array with edge densities
+		// --> a: number of edges
+		// --> v: array of possible number of vertices on each side of the bipartite graph
 		// --> seed: for random
 		// --> test: set i-th entry to true if you want to use the i-th method, false otherwise
 		int N = 10;
 		int a = 2000;
 		int[] v = new int[] {50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200};
 		long seed = 1;
-		//figure 4
 		boolean[] test = new boolean[] {false, false, false, true, true,
 										false, false, false, true, true};
 

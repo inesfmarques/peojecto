@@ -1,4 +1,5 @@
-/* Example of usage of TimeTest to perform time measurements */
+/* Usage of TimeTest to obtain time performances of maximum bipartite matchings for fixed number of vertices */
+/* Generates Figure 1 of the report */
 
 package timetest;
 
@@ -15,7 +16,7 @@ public class TimeTest_UW_FixV {
 		// --> N: number of graphs for each probability
 		// --> min: minimum number of vertices in each set
 		// --> max: maximum number of vertices in each set
-		// --> edgeDensity: array with edge densities
+		// --> p: array with edge densities
 		// --> seed: for random
 		// --> test: set i-th entry to true if you want to use the i-th method, false otherwise
 		int N = 100;
@@ -23,7 +24,6 @@ public class TimeTest_UW_FixV {
 		int max = 2000;
 		double[] p = new double[] {0.001, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95};
 		long seed = 1;
-		//figure 2
 		boolean[] test = new boolean[] {true, true, true, false, false,
 										true, true, true, false, false};
 		

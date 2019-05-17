@@ -1,3 +1,6 @@
+/* Usage of TimeTest to obtain time performances of maximum weighted bipartite matchings for fixed number of edges */
+/* Generates Figure 3b of the report */
+
 package timetest;
 
 import java.util.Random;
