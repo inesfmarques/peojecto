@@ -21,7 +21,7 @@ public class TimeTest_UW_Matroid_FixE {
 		int a = 2000;
 		int[] v = new int[] {50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200};
 		long seed = 1;
-		figure 4
+		//figure 4
 		boolean[] test = new boolean[] {false, false, false, true, true,
 										false, false, false, true, true};
 

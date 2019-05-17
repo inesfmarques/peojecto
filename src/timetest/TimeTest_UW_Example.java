@@ -23,9 +23,6 @@ public class TimeTest_UW_Example {
 		int max = 200;
 		double[] p = new double[] {0.001, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95};
 		long seed = 1;
-		//--> test: diz quais os algoritmos a correr: EdmondsKarp m, FordFulkerson m, HopcroftKarp m, MatroidIntersectionBad m,  MatroidIntersection m, 
-		//				       						  EdmondsKarp l, FordFulkerson l, HopcroftKarp l, MatroidIntersectionBad l,  MatroidIntersection l,
-		
 		boolean[] test = new boolean[] {false, false, false, true, true,
 										false, false, false, true, true};
 		
