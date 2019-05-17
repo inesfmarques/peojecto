@@ -24,6 +24,10 @@ public interface BipWG {
 	// Does nothing if l and r are in the same set
 	void addEdge(int l, int r, double w);
 	
+	// Adds directed edges from vertex l to vertices in array rArray with weights in wArray
+	// Does nothing when vertices are in the same set
+	void addEdge(int l, int[] rArray, double[] wArray);
+	
 	// Returns True if there is an edge from l to r, False otherwise
 	boolean edgeQ(int l, int r);
 	

@@ -287,10 +287,11 @@ public class BipWGSS_List implements BipWGSS {
 		int current = source;
 		for(int i=0; i<L+R+1; i++) {
 			seen[current] = true;
+			if(current == sink) continue;
 			ArrayList<Integer> l = lovers(current);
 			for(int j=0; j<l.size(); j++) {
 				int v = l.get(j);
-				if(!seen[v]) {
+				if(!seen[v] && !(h[v] == Double.MAX_VALUE)) {
 					double w = getWeight(current,v) + h[current] - h[v];
 					if(dist[current] != Double.MAX_VALUE && dist[current] + w < dist[v]) {
 						dist[v] = dist[current] + w;
@@ -338,10 +339,11 @@ public class BipWGSS_List implements BipWGSS {
 			current = PQ.poll().getId();
 			if(dist[current] == Double.MAX_VALUE) break;
 			seen[current] = true;
+			if(current == sink) continue;
 			ArrayList<Integer> l = lovers(current);
 			for(int j=0; j<l.size(); j++) {
 				int v = l.get(j);
-				if(!seen[v]) {
+				if(!seen[v] && !(h[v] == Double.MAX_VALUE)) {
 					double w = getWeight(current,v) + h[current] - h[v];
 					if(dist[current] != Double.MAX_VALUE && dist[current] + w < dist[v]) {
 						dist[v] = dist[current] + w;
