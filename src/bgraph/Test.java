@@ -1,4 +1,5 @@
 /* Example of usage of BipG and matching methods */
+/* See 'BipG' interface for a full list of available methods */
 
 package bgraph;
 import java.util.Arrays;
