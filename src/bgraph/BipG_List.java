@@ -3,6 +3,7 @@
 package bgraph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import matroid.Matroid;
 import matroid.MatroidIntersector;
@@ -145,7 +146,7 @@ public class BipG_List implements BipG {
 		Matroid<int[], BipGMatroidSubset> matroidL = new BipGMatroid(this, true);
 		Matroid<int[], BipGMatroidSubset> matroidR = new BipGMatroid(this, false);
 		MatroidIntersector<int[], BipGMatroidSubset, BipGMatroidSubset> intersector =
-				new MatroidIntersector<int[], BipGMatroidSubset, BipGMatroidSubset>();
+				new MatroidIntersector<int[], BipGMatroidSubset, BipGMatroidSubset>();		
 		
 		return intersector.intersection(matroidL, matroidR);
 	}

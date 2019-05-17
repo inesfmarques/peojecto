@@ -1,3 +1,5 @@
+/* Example of usage of BipG and matching methods */
+
 package bgraph;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -5,42 +7,49 @@ import java.util.ArrayList;
 public class Test {
 
 	public static void main(String[] args) {
-		BipG G = new BipG_List(10, 12);
-		
-		G.addEdge(0, new int[] {13,14,17,20});
-		G.addEdge(1, new int[] {10,11,12,17,19});
-		G.addEdge(2, new int[] {11,13,14,16,17,18,20});
-		G.addEdge(3, new int[] {12,14,16,17,19});
-		G.addEdge(4, new int[] {11,13,19});
-		G.addEdge(5, new int[] {15,16,18,19});
-		G.addEdge(6, new int[] {11,18,19,20});
-		G.addEdge(7, new int[] {12,13,15,16});
-		G.addEdge(8, new int[] {10,11,12,14,15,18,19});
-		G.addEdge(9, new int[] {11,13,16,17,18,19,20});
-		
-		/*
-		G.addEdge(0, new int[] {10,11});
-		G.addEdge(1, new int[] {10,14});
-		G.addEdge(2, new int[] {12,13});
-		G.addEdge(3, new int[] {10,14});
-		G.addEdge(4, new int[] {11,13});
-		
-		
-		G.addEdge(0, 10);
-		G.addEdge(2, 9);
-		G.addEdge(3, 7);
-		G.addEdge(3, 9);
-		G.addEdge(4, 7);
-		G.addEdge(4, 10);
-		*/
-		
-		System.out.println("Starting graph:");
+		/* Create graph */
+		BipG G = new BipG_Matrix(3, 3);
+		/* Add edges to graph */
+		G.addEdge(0, new int[] {3});
+		G.addEdge(1, new int[] {3,4});
+		G.addEdge(2, new int[] {4,5});
+		/* Print graph */
+		System.out.println("Graph 1:");
 		System.out.print(G);
-		System.out.println();
+		
+		/* Find a matching using one of the methods */
 		ArrayList<int[]> results = G.FordFulkerson();
-		System.out.println("Result: ");
+		
+		/* Print the results */
+		System.out.println();
+		System.out.println("Maximal matching of graph 1:");
 		for (int i = 0; i < results.size(); i++) {
 			System.out.println(Arrays.toString(results.get(i)));
-		}	
+		}
+		System.out.print("\n\n");
+		
+		
+		/* Create graph */
+		BipG H = new BipG_List(6, 5);
+		/* Add edges to graph */
+		H.addEdge(0, new int[] {6,7});
+		H.addEdge(1, new int[] {6,10});
+		H.addEdge(2, new int[] {8,9});
+		H.addEdge(3, new int[] {6,7,10});
+		H.addEdge(4, new int[] {7,9});
+		H.addEdge(5, new int[] {7});
+		/* Print graph */
+		System.out.println("Graph 2:");
+		System.out.print(H);
+		
+		/* Find a matching using one of the methods */
+		results = H.MatroidIntersection();
+		
+		/* Print the results */
+		System.out.println();
+		System.out.println("Maximal matching of graph 2:");
+		for (int i = 0; i < results.size(); i++) {
+			System.out.println(Arrays.toString(results.get(i)));
+		}
 	}
 }

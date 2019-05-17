@@ -75,7 +75,7 @@ public class BipGMatroid implements Matroid<int[], BipGMatroidSubset> {
 	// Converts an ArrayList into a Subset, to be used with the remaining methods
 	public BipGMatroidSubset arrayToSubset(ArrayList<int[]> set){
 		if (side) return new BipGMatroidSubset(side, G.getL(), G.getR(), set);
-		else return new BipGMatroidSubset(side, G.getR(), G.getR(), set);
+		else return new BipGMatroidSubset(side, G.getL(), G.getR(), set);
 	}
 	
 	// Input:
