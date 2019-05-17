@@ -1,5 +1,5 @@
 AA Project - Maximum Bipartite Matchings and Matroid Intersections (implemented in Java)
-By: Henrique Santos (83630), Inês Marques (83633), Mariana Filipe (83641)
+By: Henrique Santos (83630), InÃªs Marques (83633), Mariana Filipe (83641)
 
 Package descriptions:
  - 'arborescence': Solves the spanning arborescences problem (Section 4.1 of report)
@@ -15,5 +15,5 @@ Package descriptions:
  - 'painting': Solves the painting problem (Section 4.2 of report)
     Class 'Test' showcases main methods
     Requires 'graph' and 'matroid' packages
- - 'timetest': Stores the classes used to measure the time performances of maximum matching methods
+ - 'timetest': Stores the classes used to measure the time performances of methods
     Requires 'bgraph', 'bwgraph' and 'matroid' packages
