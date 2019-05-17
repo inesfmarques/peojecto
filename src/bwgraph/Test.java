@@ -1,3 +1,5 @@
+/* Example of usage of BipWG and matching methods */
+
 package bwgraph;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class Test {
 		System.out.print(G);
 		
 		/* Find a matching using one of the methods */
-		ArrayList<int[]> results = G.MatchingDijkstra();
+		ArrayList<int[]> results = G.MatchingBellmanFord();
 		
 		/* Print the results */
 		System.out.println();
@@ -30,28 +32,26 @@ public class Test {
 		}
 		System.out.print("\n\n");
 		
-		/*
-		BipWG graph = new BipWG_Matrix(10,4);
-		graph.addEdge(2, 12, 0);
-		graph.addEdge(12, 9, -6);
-		graph.addEdge(5, 13, -2);
-		System.out.println(graph);
+		/* Create graph */
+		BipWG H = new BipWG_Matrix(3, 3);
+		/* Add edges to graph */
+		H.addEdge(0, new int[] {3,4}, new double[] {15,13});
+		H.addEdge(1, new int[] {3,5}, new double[] {6,4});
+		H.addEdge(2, new int[] {4,5}, new double[] {14,10});
+		/* Print graph */
+		System.out.println("Graph 2:");
+		System.out.print(H);
 		
-		graph.addEdge(13, 5, 2);
-		System.out.println(graph);
+		/* Find a matching using one of the methods */
+		results = H.MatchingDijkstraPQ();
 		
-		System.out.println(graph.edgeQ(5, 13));
-		System.out.println(graph.getWeight(5, 13));
-		System.out.println(graph.edgeQ(13, 5));
-		System.out.println(graph.getWeight(13, 5));
-		
+		/* Print the results */
 		System.out.println();
-		
-		System.out.println(graph.edgeQ(2,12));
-		System.out.println(graph.getWeight(2,12));
-		System.out.println(graph.edgeQ(12,2));
-		System.out.println(graph.getWeight(12,2));
-		*/
+		System.out.println("Maximal matching of graph 2:");
+		for (int i = 0; i < results.size(); i++) {
+			System.out.println(Arrays.toString(results.get(i)));
+		}
+		System.out.print("\n\n");
 	}
 
 }
